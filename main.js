@@ -40,6 +40,7 @@ var thereplying = [];
 var theattachments = [];
 var autoscroll = false;
 var istyping = true;
+var isserver = false;
 
 
 var theoldcustemotes = {
@@ -250,7 +251,7 @@ function login() {
    thetoken = document.getElementById("token").value;
    document.getElementById("logo2").innerHTML = '';
     document.getElementById("loggingin").innerHTML = '';
-    document.getElementById("precontrols").innerHTML = '<button onclick="changeservchannel()">Servers</button>';
+    document.getElementById("precontrols").innerHTML = '<select id="selecftt" onchange="chchannelyes()"></select><button onclick="changeservchannel()">Servers</button>';
     document.getElementById("controls").innerHTML = '<input id="a"/><button id="send" onclick="sendmessagelegacy()">Send</button><button onclick="attachprepare()">+</button><button id="gett" onclick="getmessagelegacy()">Full channel/WS reload</button>';
 
 
@@ -382,9 +383,18 @@ function chchannelnext(){
   thechannel = document.getElementById('selecttt').value ;
   lastmessage = undefined;
   firstmessage = undefined;
+  document.getElementById('selecftt').innerHTML = document.getElementById('selecttt').innerHTML
   document.getElementById("messages").innerHTML = "";
   document.getElementById("precontrols").hidden = false;
   document.getElementById("controls").hidden = false;
+  getmessagelegacy();
+}
+
+function chchannelyes(){
+  thechannel = document.getElementById('selecftt').value ;
+  lastmessage = undefined;
+  firstmessage = undefined;
+  document.getElementById("messages").innerHTML = "";
   getmessagelegacy();
 }
 
@@ -873,6 +883,12 @@ function rendermessages(){
 
 
 function getmessagelegacy(){
+
+
+
+
+
+
   istyping = true;
   var getmsgsa = new XMLHttpRequest();
  // if (typeof lastmessage == 'undefined'){
