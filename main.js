@@ -251,7 +251,7 @@ function login() {
    thetoken = document.getElementById("token").value;
    document.getElementById("logo2").innerHTML = '';
     document.getElementById("loggingin").innerHTML = '';
-    document.getElementById("precontrols").innerHTML = '<select id="selecftt" onchange="chchannelyes()"></select><button onclick="changeservchannel()">Servers</button>';
+    document.getElementById("precontrols").innerHTML = '<select id="selecftt" onchange="chchannelyes()"></select><button onclick="changeservchannel()">Home</button>';
     document.getElementById("controls").innerHTML = '<input id="a"/><button id="send" onclick="sendmessagelegacy()">Send</button><button onclick="attachprepare()">+</button><button id="gett" onclick="getmessagelegacy()">Full channel/WS reload</button>';
 
 
