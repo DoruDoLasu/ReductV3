@@ -265,7 +265,7 @@ function changeservchannel(){
   document.getElementById("controls").hidden = true;
   document.getElementById("replyingto").innerHTML = '';
   document.getElementById("typing").innerHTML = '';
-  document.getElementById("messages").innerHTML = '<button onclick="grouplist()">Groups</button><button onclick="dmlist()">DM list</button><button onclick="savednotesgo()">Saved Notes</button><h1>Select server: </h1><select name="seletcc" id="selectt" onchange="chserver()"></select>';
+  document.getElementById("messages").innerHTML = '<button onclick="grouplist()">Groups</button><button onclick="dmlist()">DM list</button><button onclick="savednotesgo()">Saved Notes</button><br><button onclick="gosettings()">Client settings</button><h1>Select server: </h1><select name="seletcc" id="selectt" onchange="chserver()"></select>';
   serverlist.forEach(function(item, index) {
     var server = document.createElement("option");
     server.textContent = item.name;
@@ -282,6 +282,26 @@ function changeservchannel(){
 
 
 });
+}
+
+function toggleset(set){
+  switch (window[set]) {
+	  case true:
+		window[set] = false;
+		console.log(set + " set to false");
+		break;
+	  case false:
+		window[set] = true;
+		console.log(set + " set to true");
+		break; 
+	}
+}
+
+function gosettings(){
+  document.getElementById("messages").innerHTML = '<button onclick="changeservchannel()">Home</button><br><input type="checkbox" id="scrolloff" name="scrolloff" onchange="toggleset(\'autoscroll\')"><label for="autoscroll">Toggle autoscroll</label>';
+  if (autoscroll == true) {
+    document.getElementById("scrolloff").checked = true;
+  }
 }
 
 function chserver(){
