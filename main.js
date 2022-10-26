@@ -462,7 +462,30 @@ if (theattachments.length > 0){
   }
 
 
+function joinserver(servid){
+	if (servid.indexOf("/") != -1){
+		servid = servid.split("/")[3];
+  }
+  var sendmsgsa = new XMLHttpRequest();
+  sendmsgsa.open("POST", "https://api.revolt.chat/invites/"+servid, true);
+  sendmsgsa.setRequestHeader("x-session-token", thetoken);
+  sendmsgsa.setRequestHeader("Accept", "*/*");
+  sendmsgsa.setRequestHeader("Content-Type", "application/json");
 
+  sendmsgsa.onreadystatechange = function(){
+    if(sendmsgsa.readyState === 4){
+        if(sendmsgsa.status === 204){
+            console.log("Server joined");
+            dowebsocketstuff();
+            }
+        if(sendmsgsa.status === 403){
+            console.log("Server not joined (invalid invite?)");
+            }
+    }
+  };
+  sendmsgsa.send();
+
+  }
 
 
 function deletemessage(messid){
