@@ -186,7 +186,7 @@ socket.addEventListener('open', function (event) {
               });
 
 socket.addEventListener('close', function (event) {
-document.getElementById("wsconnection").innerText = "WS closed, press WS reload button to reconnect";
+document.getElementById("wsconnection").innerText = "WS closed, press Fresh to reconnect";
               document.getElementById("wsconnection").style.color = "#E11423";
 });
 
@@ -252,7 +252,7 @@ function login() {
    document.getElementById("logo2").innerHTML = '';
     document.getElementById("loggingin").innerHTML = '';
     document.getElementById("precontrols").innerHTML = '<select id="selecftt" onchange="chchannelyes()"></select><button onclick="changeservchannel()">Home</button>';
-    document.getElementById("controls").innerHTML = '<input id="a"/><button id="send" onclick="sendmessagelegacy()">Send</button><button onclick="attachprepare()">+</button><button id="gett" onclick="getmessagelegacy()">Full channel/WS reload</button>';
+    document.getElementById("controls").innerHTML = '<button onclick="attachprepare()">+</button><input id="a"/><button id="send" onclick="sendmessagelegacy()">Send</button><button id="gett" onclick="getmessagelegacy()">Fresh</button>';
 
 
 
@@ -754,7 +754,7 @@ function rendermessages(){
                   }
 
                   else if (theusers[themessages[i].author] === undefined){
-                    document.getElementById("messages").innerHTML += '<div id="'+themessages[i]._id+'" class="nmsgtop">'+'<span style="color: #764347">'+ themessages[i].author +' (full refresh to get)</span>';
+                    document.getElementById("messages").innerHTML += '<div id="'+themessages[i]._id+'" class="nmsgtop">'+'<span style="color: #764347">'+ themessages[i].author +' (press Fresh to get)</span>';
 
                   } else {
                   if (theusers[themessages[i].author][1] == "nope") {
