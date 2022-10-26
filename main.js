@@ -430,8 +430,8 @@ function customidpick(){
 
 function highlight(id){
   colour = document.getElementById(id).style.color;
-  document.getElementById(id).style.backgroundColor = "#aa0000";
-  setTimeout(function() {document.getElementById(id).style.backgroundColor = null;}, 1000);
+  document.getElementById(id).style.backgroundColor = "#000000";
+  setTimeout(function() {document.getElementById(id).style.backgroundColor = null;}, 2000);
 }
 
 function ulidtodate(ulid){
