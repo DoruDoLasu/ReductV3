@@ -314,7 +314,7 @@ function chserver(){
 });
 
   document.getElementById("channelpick").innerHTML += '<button onclick="chchannelnext()">ok</button>';
-  document.getElementById("channelpick").innerHTML += '<h2>Manual channel id: </h2><input id="customchannel"></input><button onclick="customidpick()">ok</button>';
+  document.getElementById("channelpick").innerHTML += '<h2>Manual channel id: </h2><input id="customchannel"></input><button onclick="customidpick()">ok</button><h2>Join server: </h2><input id="joinserv"></input><button onclick="joinserver(document.getElementById("joinserv"))">ok</button>';
 
 }
 
