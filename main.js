@@ -428,6 +428,11 @@ function customidpick(){
   getmessagelegacy();
 }
 
+function highlight(id){
+  colour = document.getElementById(id).style.color
+  document.getElementById(id).style.backgroundColor = "#aa0000"
+  setTimeout(function() {document.getElementById(id).style.backgroundColor = null;}, 1000);
+}
 
 function ulidtodate(ulid){
     digits = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
@@ -773,7 +778,7 @@ function rendermessages(){
                   if (themessages[i].replies !== undefined) {
                     document.getElementById("messages").innerHTML += '<span style="color: #ffffff">replies to </span>';
                     for (rep=0;rep<themessages[i].replies.length;rep++){
-                    document.getElementById("messages").innerHTML += '<a href="#' + themessages[i].replies[rep] + '">['+(rep+1)+']</a> ';
+                    document.getElementById("messages").innerHTML += '<a onclick="highlight('themessages[i].replies[rep]+')" href="#' + themessages[i].replies[rep] + '">['+(rep+1)+']</a> ';
                     }
                   }
 
