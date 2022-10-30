@@ -147,11 +147,7 @@ var theoldcustemotes = {
         "noted": "noted.gif",
         "waving": "waving.png",
         "mogusvented": "mogusvented.png",
-    };
-
-
-
-
+};
 
 document.getElementById("messages").innerHTML = '<div id="loggingin" style="text-align: center;display: grid;"><input id="token"/><h4 id="logo2">ENTER TOKEN HERE and press ok</h4><button onclick="login()">ok</button><input type="checkbox" onclick="wipelocal()" id="keeptoken" name="keep"><label for="keep">Keep entered token saved in localStorage of your browser (unchecking clears it)</label><h4 id="logo2">To obtain your token, paste and press enter on this in the web console (Ctrl-Shift-I) if you\'re using Revite (default Revolt chat client): <p>window.state.auth.sessions.get(controllers.client.getReadyClient().user._id).session.token</p> or check out <a style="color: #BB000E" href="https://infi.sh/post/revolt-tokens">Infi\'s website</a> if you want a slower way that will work with all Revolt web clients</h4><h4 id="logo2"><br/><a style="color: #BB000E" href="https://github.com/DoruDoLasu/Reduct">ReductV3 GitHub</a></h4></div><h4 id="extras">Extra options: </h4><input type="checkbox" id="scrolloff" name="scrolloff"><label for="scrolloff">Always autoscroll</label>';
 
@@ -161,9 +157,6 @@ if (localStorage.tokeno !== undefined) {
   document.getElementById("token").value = localStorage.tokeno;
   document.getElementById("keeptoken").checked = true;
 }
-
-
-
 if (thetoken !== undefined) {
   document.getElementById("messages").innerHTML = '';
   document.getElementById("precontrols").hidden = false;
@@ -338,7 +331,6 @@ function chserver(){
 
 }
 
-
 function dmlist(){
    thechannel = undefined;
    document.getElementById("replyingto").innerHTML = '';
@@ -385,7 +377,6 @@ function grouplist(){
 });
 }
 
-
 function savednotesgo(){
   thechannel = channellist[0]._id;
   lastmessage = undefined;
@@ -395,9 +386,6 @@ function savednotesgo(){
   document.getElementById("controls").hidden = false;
   getmessagelegacy();
 }
-
-
-
 
 function chchannelnext(){
   thechannel = document.getElementById('selecttt').value ;
@@ -444,7 +432,6 @@ function ulidtodate(ulid){
     return finaldate;
 }
 
-
 function sendmessagelegacy(){
   var sendmsgsa = new XMLHttpRequest();
   sendmsgsa.open("POST", "https://api.revolt.chat/channels/"+thechannel+"/messages", true);
@@ -484,8 +471,7 @@ if (theattachments.length > 0){
     //sendmsgsa.send("{\"content\":\" " +  + "\",\"replies\":[]}");
     document.getElementById("a").value = "";
     //setTimeout(function () { getmessagelegacy(); document.getElementById("a").value = "" }, 1000);
-  }
-
+}
 
 function joinserver(servid){
 	if (servid.indexOf("/") != -1){
@@ -510,8 +496,7 @@ function joinserver(servid){
   };
   sendmsgsa.send();
 
-  }
-
+}
 
 function deletemessage(messid){
   var sendmsgsa = new XMLHttpRequest();
@@ -535,8 +520,7 @@ function deletemessage(messid){
   };
   sendmsgsa.send();
 
-  }
-
+}
 
 function leaveleteserver(serverus){
   var sendmsgsa = new XMLHttpRequest();
@@ -559,9 +543,7 @@ function leaveleteserver(serverus){
   };
   sendmsgsa.send();
 
-  }
-
-
+}
 
 function reacttopre(messid){
   reactid = prompt("What emoji id?");
@@ -572,7 +554,6 @@ function reacttopre(messid){
   reactto(messid, reactid);
 }
 }
-//
 
 function reactto(messid, emoteid){
   var sendmsgsa = new XMLHttpRequest();
@@ -596,7 +577,7 @@ function reactto(messid, emoteid){
   };
   sendmsgsa.send();
 
-  }
+}
 
 function editprepare(messageid){
   istyping = false;
@@ -633,7 +614,7 @@ function editmessage(messid){
                           replies: thereplying}));
   resetreplytachment()
 
-  }
+}
 
 function attachprepare(){
   istyping = false;
@@ -678,9 +659,6 @@ function uploadautumn(){
   }
 }
 
-
-
-
 function repply(replyid){
   if (thereplying.length < 5){
  thereplying.push({id: replyid, mention:false});
@@ -698,17 +676,12 @@ function resetreplytachment(){
   replytachment();
 }
 
-
 function replytachment(){
 
 
   document.getElementById("replyingto").innerHTML = '<span>Replies to: ' + thereplying.length + '</span><span>, attachments: ' + theattachments.length + '    </span><span onclick="resetreplytachment()">[reset]</span>';
 
 }
-
-
-
-
 
 function rendermessages(){
               for (var i=0; i < theparsedthing.users.length; i++) {
@@ -923,12 +896,7 @@ function rendermessages(){
                 replytachment();
 
               }
-        }
-
-
-
-
-
+}
 
 function getmessagelegacy(){
 
@@ -1008,20 +976,20 @@ function getmessagelegacyolder(){
 getmsgsa.send(null);
 }
 
-
-
-
 function keepAlive() {
   if (socket.readyState == socket.OPEN) {
     socket.send('{"type": "Ping","data": ' + Date.now() + '}');
   }
   timerId = setTimeout(keepAlive, 30000);
 }
+
 function cancelKeepAlive() {
   if (timerId) {
     clearTimeout(timerId);
   }
 }
+
+// Keyboard controls
 
 document.addEventListener('keyup', function(event){
 	if(event.key === "Escape"){
