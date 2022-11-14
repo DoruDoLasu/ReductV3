@@ -916,7 +916,7 @@ function rendermessages(){
                     message.appendChild(att);
 
                     if (themessages[i]["attachments"][index]["metadata"]["type"] == "Image") {
-                      document.getElementById("messages").innerHTML += '<img class="embed" src="https://autumn.revolt.chat/attachments/' + themessages[i]["attachments"][index]["_id"] + '"></img>';
+                      //document.getElementById("messages").innerHTML += '<img class="embed" src="https://autumn.revolt.chat/attachments/' + themessages[i]["attachments"][index]["_id"] + '"></img>';
 
                       emb = document.createElement("img");
                       emb.id = "emb" + index;
