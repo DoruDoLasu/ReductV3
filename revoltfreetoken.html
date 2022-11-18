@@ -1,0 +1,62 @@
+<html><head></head><body>
+  <h1>Revolt free token</h1>
+<h4>want to use a third party client but you are on phone/locked device and can't access the dev console? just put your email, password and desired session name and you'll get it! these are only sent to revolt by https post request so only it gets those. feel free to read the source of this website if you don't believe, or at https://github.com/DoruDoLasu/ReductV3/revoltfreetoken.html</h4>
+<h3 id="tokeno"></h3>
+
+<span>
+  <span>email: </span><input id="emu">
+  <span>password: </span><input id="pass" type="password">
+  <span>session name: </span><input id="nam" value="ReductV3">
+  <button onclick="dologin()">Login</button>
+</span>
+
+<script>
+function dorequeststuff(lareq, laurl, lathing, after){
+  laurl = "https://api.revolt.chat"+laurl
+  var themsgsa = new XMLHttpRequest();
+  themsgsa.open(lareq, laurl, true);
+  themsgsa.setRequestHeader("Accept", "*/*");
+  themsgsa.setRequestHeader("Content-Type", "application/json");
+
+  themsgsa.onreadystatechange = function(){
+    if (themsgsa.readyState === 4){
+      status = themsgsa.status;
+      resp = themsgsa.responseText;
+      console.log(lareq + ": " + laurl +", got " + themsgsa.status);
+      if (typeof after == "function"){
+        after(status, resp);
+      }
+    }
+  };
+  if (lathing == null){
+    themsgsa.send();
+  }
+  else {
+    themsgsa.send(lathing);
+  }
+}
+
+
+function dologin(){
+theemail = document.getElementById("emu").value;
+thepassword = document.getElementById("pass").value;
+thenamee = document.getElementById("nam").value;
+
+thecreditials = JSON.stringify({
+                          email: theemail,
+                          password: thepassword,
+                          friendly_name: thenamee})
+console.log(thecreditials)
+dorequeststuff("POST", "/auth/session/login", thecreditials, function a(status, response){
+	thetokeno = JSON.parse(response)["token"];
+	document.getElementById("tokeno").innerText = "Your token is: " + thetokeno
+});
+}
+
+
+
+
+</script>
+
+
+</body></html>
