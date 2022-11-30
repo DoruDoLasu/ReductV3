@@ -998,7 +998,7 @@ function rendermessages(){
 function getmessagelegacy(){
   istyping = true;
   dorequeststuff("GET", "/channels/"+thechannel+"/messages?include_users=true",null,function a(status, response){
-    console.log(response);
+    // console.log(response);
     if(status == 200){
       thething = response;
       theparsedthing = JSON.parse(thething);
