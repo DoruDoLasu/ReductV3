@@ -284,7 +284,7 @@ function login() {
    document.getElementById("logo2").innerHTML = '';
     document.getElementById("loggingin").innerHTML = '';
     document.getElementById("precontrols").innerHTML = '<select id="selecftt" onchange="chchannelyes()"></select><button onclick="changeservchannel()">Home</button>';
-    document.getElementById("controls").innerHTML = '<button onclick="attachprepare()" style="width: 4%">+</button><input id="a" style="width: 64%"/><button id="send" onclick="sendmessagelegacy()" style="width: 20%">==></button><button id="gett" onclick="getmessagelegacy()" style="width: 10%">Fresh</button>';
+    document.getElementById("controls").innerHTML = '<button onclick="attachprepare()" style="width: 4%">+</button><input id="a" style="width: 64%"/><button id="send" onclick="sendmessagelegacy()" style="width: 20%">==></button><button id="gett" onclick="getmessages()" style="width: 10%">Fresh</button>';
 
 
 
@@ -423,7 +423,7 @@ function savednotesgo(){
   document.getElementById("messages").innerHTML = "";
   document.getElementById("precontrols").hidden = false;
   document.getElementById("controls").hidden = false;
-  getmessagelegacy();
+  getmessages();
 }
 
 function chchannelnext(){
@@ -434,7 +434,7 @@ function chchannelnext(){
   document.getElementById("messages").innerHTML = "";
   document.getElementById("precontrols").hidden = false;
   document.getElementById("controls").hidden = false;
-  getmessagelegacy();
+  getmessages();
 }
 
 function chchannelyes(){
@@ -442,7 +442,7 @@ function chchannelyes(){
   lastmessage = undefined;
   firstmessage = undefined;
   document.getElementById("messages").innerHTML = "";
-  getmessagelegacy();
+  getmessages();
 }
 
 function customidpick(){
@@ -452,7 +452,7 @@ function customidpick(){
   document.getElementById("messages").innerHTML = "";
   document.getElementById("precontrols").hidden = false;
   document.getElementById("controls").hidden = false;
-  getmessagelegacy();
+  getmessages();
 }
 
 function highlight(id){
@@ -519,7 +519,7 @@ function deletemessage(messid){
   dorequeststuff("DELETE", "/channels/"+thechannel+"/messages/"+messid, null, function(status, result){
     if(result === 204){
       console.log("Message deleted");
-      setTimeout(function () { document.getElementById(messid).remove(); getmessagelegacy();  }, 1000);
+      setTimeout(function () { document.getElementById(messid).remove(); getmessages();  }, 1000);
     }
     if(result === 403){
       console.log("Message not deleted");
@@ -554,7 +554,7 @@ function reactto(messid, emoteid){
   dorequeststuff("PUT", "/channels/"+thechannel+"/messages/"+messid+"/reactions/"+emoteid,null,function(status){
         if(status === 204){
             console.log("Reacted");
-            setTimeout(function () { document.getElementById(messid).remove(); getmessagelegacy();  }, 1000);
+            setTimeout(function () { document.getElementById(messid).remove(); getmessages();  }, 1000);
             }
         if(status === 403){
             console.log("Not reacted");
@@ -578,7 +578,7 @@ function editmessage(messid){
         if(status === 200){
             console.log("Edited");
             document.getElementById("typing").innerHTML = '';
-            setTimeout(function () {document.getElementById("typing").innerHTML = '';istyping = true;getmessagelegacy();  }, 1000);
+            setTimeout(function () {document.getElementById("typing").innerHTML = '';istyping = true;getmessages();  }, 1000);
             }
         else if(status === 403){
             console.log("Not edited");
@@ -995,7 +995,7 @@ function rendermessages(){
               }
 }
 
-function getmessagelegacy(){
+function getmessages(){
   istyping = true;
   dorequeststuff("GET", "/channels/"+thechannel+"/messages?include_users=true",null,function a(status, response){
     // console.log(response);
