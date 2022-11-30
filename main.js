@@ -284,7 +284,7 @@ function login() {
    document.getElementById("logo2").innerHTML = '';
     document.getElementById("loggingin").innerHTML = '';
     document.getElementById("precontrols").innerHTML = '<select id="selecftt" onchange="chchannelyes()"></select><button onclick="changeservchannel()">Home</button>';
-    document.getElementById("controls").innerHTML = '<button onclick="attachprepare()" style="width: 4%">+</button><input id="a" style="width: 64%"/><button id="send" onclick="sendmessagelegacy()" style="width: 20%">==></button><button id="gett" onclick="getmessages()" style="width: 10%">Fresh</button>';
+    document.getElementById("controls").innerHTML = '<button onclick="attachprepare()" style="width: 4%">+</button><input id="a" style="width: 64%"/><button id="send" onclick="sendmessage()" style="width: 20%">==></button><button id="gett" onclick="getmessages()" style="width: 10%">Fresh</button>';
 
 
 
@@ -471,7 +471,7 @@ function ulidtodate(ulid){
     return finaldate;
 }
 
-function sendmessagelegacy(){
+function sendmessage(){
   // Checking for attachments
   if (theattachments.length > 0){
     wiadomosc = JSON.stringify({
