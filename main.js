@@ -38,7 +38,7 @@ var timer = 0;
 var socket = 0;
 var thereplying = [];
 var theattachments = [];
-var autoscroll = false;
+var autoscroll = true;
 var istyping = true;
 var isserver = false;
 
@@ -151,6 +151,20 @@ var theoldcustemotes = {
         "mogusvented": "mogusvented.png",
 };
 
+var thebadges = {
+    Developer: 1,
+    Translator: 2,
+    Supporter: 4,
+    ResponsibleDisclosure: 8,
+    Founder: 16,
+    PlatformModeration: 32,
+    ActiveSupporter: 64,
+    Paw: 128,
+    EarlyAdopter: 256,
+    ReservedRelevantJokeBadge1: 512,
+    ReservedRelevantJokeBadge2: 1024,
+}
+
 document.getElementById("messages").innerHTML = '<div id="loggingin" style="text-align: center;display: grid;"><input id="token"/><h4 id="logo2">ENTER TOKEN HERE and press ok</h4><button onclick="login()">ok</button><input type="checkbox" onclick="wipelocal()" id="keeptoken" name="keep"><label for="keep">Keep entered token saved in localStorage of your browser (unchecking clears it)</label><h4 id="logo2">To obtain your token, paste and press enter on this in the web console (Ctrl-Shift-I) if you\'re using Revite (default Revolt chat client): <p>window.state.auth.sessions.get(controllers.client.getReadyClient().user._id).session.token</p> or check out <a style="color: #BB000E" href="https://infi.sh/post/revolt-tokens">Infi\'s website</a> if you want a slower way that will work with all Revolt web clients</h4><h4 id="logo2"><br/><a style="color: #BB000E" href="https://github.com/DoruDoLasu/Reduct">ReductV3 GitHub</a></h4></div><h4 id="extras">Extra options: </h4><input type="checkbox" id="scrolloff" name="scrolloff"><label for="scrolloff">Always autoscroll</label>';
 
 thestage = "login";
@@ -195,17 +209,6 @@ function dorequeststuff(lareq, laurl, lathing, after){
   }
 }
 
-function dorequeststuffsync(lareq, laurl, lathing){
-  laurl = "https://api.revolt.chat"+laurl
-  var themsgsa = new XMLHttpRequest();
-  themsgsa.open(lareq, laurl, false);
-  themsgsa.setRequestHeader("x-session-token", thetoken);
-  themsgsa.setRequestHeader("Accept", "*/*");
-  themsgsa.setRequestHeader("Content-Type", "application/json");
-  themsgsa.send();
-  return themsgsa.status;
-}
-
 function dowebsocketstuff() {
  socket = new WebSocket('wss://ws.revolt.chat');
 
@@ -243,9 +246,18 @@ socket.addEventListener('message', function (event) {
                   themessages[0] = thenewstuff;
                   rendermessages();
                   if (autoscroll == true){
-                    document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
+                    if (document.getElementById("messages").scrollTop >= document.getElementById("messages").scrollHeight*0.75){
+                document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
+                }
                   }
                 }
+                if ((JSON.parse(datta)["type"] == "MessageDelete") && (JSON.parse(datta)["channel"] == thechannel)){
+                 document.getElementById(JSON.parse(datta)["id"]).remove();
+                }
+                //if ((JSON.parse(datta)["type"] == "MessageUpdate") && (JSON.parse(datta)["channel"] == thechannel)){
+                 //edite = JSON.parse(datta);
+                 //document.getElementById(edite["id"]).innerText = //edite.;
+                //}
                 if (JSON.parse(datta)["type"] == "ChannelStartTyping" && JSON.parse(datta)["id"] == thechannel) {
                   if (istyping == true){
                     typtyp = JSON.parse(datta);
@@ -359,12 +371,33 @@ function chserver(){
 //    document.getElementById("selecttt").innerHTML += '<option value="' + item + //'">' + index + ': ' + item + '</option>';
 //});
 
+thenamedchannels = [];
+lefttogo = theparsedserver["channels"];
   thefirstthing.channels.forEach(function (item, index){
   if (item.server == theserver){
-        document.getElementById("selecttt").innerHTML += '<option value="' + item._id + '">' + index + ': ' + item.name + '</option>';
+        //document.getElementById("selecttt").innerHTML += '<option value="' + item._id + '">' + index + ': ' + item.name + '</option>';
+        thenamedchannels[item._id] = item.name
+
 }
 });
 
+ if (theparsedserver.categories.length != 0){
+   theparsedserver["categories"].forEach(function(item, index){
+     document.getElementById("selecttt").innerHTML += '<optgroup label="' + item.title + '">';
+     item.channels.forEach(function(itemx,indexx){
+      document.getElementById("selecttt").innerHTML += '<option value="' + itemx + '">' + thenamedchannels[itemx] + '</option>';
+       lefttogo.pop(itemx);
+     });
+     document.getElementById("selecttt").innerHTML += '</optgroup>'
+   });
+}
+  if (lefttogo.length != 0){
+    document.getElementById("selecttt").innerHTML += '<optgroup label="uncategorised" disabled>';
+    lefttogo.forEach(function(item, index){
+        document.getElementById("selecttt").innerHTML += '<option value="' + item + '">' + thenamedchannels[item] + '</option>';
+    });
+    document.getElementById("selecttt").innerHTML += '</optgroup>'
+  }
   document.getElementById("channelpick").innerHTML += '<button onclick="chchannelnext()">ok</button>';
   document.getElementById("channelpick").innerHTML += '<h2>Manual channel id: </h2><input id="customchannel"></input><button onclick="customidpick()">ok</button><h2>Join server: </h2><input id="joinserv"></input><button onclick="joinserver(document.getElementById(\'joinserv\').value)">ok</button>';
 
@@ -456,9 +489,15 @@ function customidpick(){
 }
 
 function highlight(id){
+  if (document.getElementById(id) !== null){
   colour = document.getElementById(id).style.color;
   document.getElementById(id).style.backgroundColor = "#000000";
   setTimeout(function() {document.getElementById(id).style.backgroundColor = null;}, 2000);
+  } else {
+    console.log("failed to highlight, not on here");
+    getmessages(id);
+    setTimeout(function() {highlight(id);}, 1000);
+  }
 }
 
 function ulidtodate(ulid){
@@ -517,11 +556,12 @@ function joinserver(servid){
 
 function deletemessage(messid){
   dorequeststuff("DELETE", "/channels/"+thechannel+"/messages/"+messid, null, function(status, result){
-    if(result === 204){
+    if(status == 204){
       console.log("Message deleted");
-      setTimeout(function () { document.getElementById(messid).remove(); getmessages();  }, 1000);
+      document.getElementById(messid).remove();
+      //setTimeout(function () { getmessages();  }, 1000);
     }
-    if(result === 403){
+    if(status == 403){
       console.log("Message not deleted");
       document.getElementById("replyingto").innerHTML = '<span style="color: #E64040">You cannot delete this message ('+ messid +')</span>';
       setTimeout(function () { document.getElementById("replyingto").innerText = '';  }, 3000);
@@ -566,13 +606,14 @@ function reactto(messid, emoteid){
 
 function editprepare(messageid){
   istyping = false;
-  document.getElementById("typing").innerHTML = '<input id="edithere" label="edited"/><button onclick="editmessage(\''+messageid+'\')">Edit</button><button onclick="closeattach()">X</button>';
+  document.getElementById("typing").innerHTML = '<input id="edithere" label="edited"/><button id="doedit" onclick="editmessage(\''+messageid+'\')">Edit</button><button onclick="closeattach()">X</button><br>';
+  document.getElementById("edithere").value = document.getElementById(messageid).querySelector("#content").innerText;
 }
 
 function editmessage(messid){
-  message =  sendmsgsa.send(JSON.stringify({
+  message = JSON.stringify({
                           content: document.getElementById("edithere").value,
-                          replies: thereplying}));
+                          replies: thereplying});
 
   dorequeststuff("PATCH", "/channels/"+thechannel+"/messages/"+messid, message, function(status){
         if(status === 200){
@@ -661,12 +702,63 @@ function replytachment(){
 function rendermessages(){
               for (var i=0; i < theparsedthing.users.length; i++) {
                   if (theusers[theparsedthing.users[i]._id] === undefined){
+                    theusers[theparsedthing.users[i]._id] = [];
+                    theusers[theparsedthing.users[i]._id][0] = theparsedthing.users[i].username;
+
+
                     if (theparsedthing.users[i].avatar !== undefined){
-                      theusers[theparsedthing.users[i]._id] = [theparsedthing.users[i].username,theparsedthing.users[i].avatar._id];
+                      theusers[theparsedthing.users[i]._id][1] = theparsedthing.users[i].avatar._id;
                     }
                     else {
-                      theusers[theparsedthing.users[i]._id] = [theparsedthing.users[i].username, "nope"];
+                      theusers[theparsedthing.users[i]._id][1] = "nope";
                     }
+
+                    theparsedthing.members.forEach(function(item,index){if(item._id.user == theparsedthing.users[i]._id){
+                      theusers[theparsedthing.users[i]._id][2] = item.joined_at;
+
+                      if (item.nickname !== undefined){
+                      theusers[theparsedthing.users[i]._id][4] =  item.nickname;
+                      }
+
+                      if (item.avatar !== undefined){
+                      theusers[theparsedthing.users[i]._id][5] =  item.avatar._id
+                      }
+
+                      if (item.roles !== undefined){
+                      theusers[theparsedthing.users[i]._id][6] = item.roles
+
+                      vipshowrole = '';
+                      viprolerank = Infinity;
+                      item.roles.forEach(function(item){
+                        if (theparsedserver.roles[item].hoist == true){
+                          if (theparsedserver.roles[item].rank < viprolerank){
+                          vipshowrole = item;
+                          viprolerank = theparsedserver.roles[item].rank;
+                          }
+                        }
+                      });
+                      theusers[theparsedthing.users[i]._id][9] = vipshowrole;
+
+
+                      }
+
+
+                      }});
+
+                      theparsedthing.users.forEach(function(item,index){if(item._id == theparsedthing.users[i]._id){
+                      if (item.badges !== undefined){
+                      theusers[theparsedthing.users[i]._id][7] = item.badges
+                      }
+
+                      if (item.status !== undefined){
+                      theusers[theparsedthing.users[i]._id][8] = item.status
+                      }
+
+                      if (item.bot !== undefined){
+                      theusers[theparsedthing.users[i]._id][10] =  item.bot
+                      }
+                      }});
+
                   }
               }
 
@@ -733,27 +825,118 @@ function rendermessages(){
                   else {
                   //document.getElementById("messages").innerHTML += '<div id="'+themessages[i]._id+'"  class="nmsgtop">'+'<span class="author"><img class="pfp" src="https://autumn.revolt.chat/avatars/'+ theusers[themessages[i].author][1] +'?max_side=32"/>'+theusers[themessages[i].author][0]+'</span>';
 
+                  if (themessages[i].author == theparsedserver.owner){
+                  var ownercrown = document.createElement("span");
+                  ownercrown.innerText = "♕";
+                  ownercrown.style.color = "#c1c14e";
+                  ownercrown.style.border = "1px solid"
+                  message.appendChild(ownercrown);
+                  }
+
+                  if (theusers[themessages[i].author][10] !== undefined){
+                  var botcrown = document.createElement("span");
+                  botcrown.innerText = "bot";
+                  botcrown.style.color = "#c95b5a";
+                  botcrown.style.border = "1px solid"
+                  message.appendChild(botcrown);
+                  }
+
                   message.className = "nmsgtop";
                   var msbegin = document.createElement("span");
                   msbegin.className = "author";
+                  msbegin.id = themessages[i].author;
+                  //msbegin.setAttribute("onClick",'document.getElementById("messages").innerHTML = "";');
                   pfp = document.createElement("img");
                   pfp.className = "pfp";
+                  if (theusers[themessages[i].author][5] !== undefined){
+                  pfp.src = 'https://autumn.revolt.chat/avatars/'+ theusers[themessages[i].author][5] +'?max_side=32';
+                  }
+                  else {
                   pfp.src = 'https://autumn.revolt.chat/avatars/'+ theusers[themessages[i].author][1] +'?max_side=32';
+                  }
                   msbegin.appendChild(pfp);
                   namem = document.createElement("span");
+                  if (theusers[themessages[i].author][4] !== undefined){
+                  namem.innerText = theusers[themessages[i].author][4];
+                  }
+                  else{
                   namem.innerText = theusers[themessages[i].author][0];
+                  }
+                  thetitle = 'username: "' + theusers[themessages[i].author][0] + '"';
+                  if (theusers[themessages[i].author][9] !== undefined){
+
+                  if (theparsedserver.roles[theusers[themessages[i].author][9]] !== undefined){
+                  if (theparsedserver.roles[theusers[themessages[i].author][9]].colour !== undefined){
+                  msbegin.style.background = theparsedserver.roles[theusers[themessages[i].author][9]].colour;
+                  msbegin.style.backgroundClip = "text";
+                  msbegin.style.color = "transparent";
+                  msbegin.style.borderColor = "#777777";
+                  }}
+
+                  // I'll be honest, I have no idea why this one if undefined is needed, but ok
+                  if (theusers[themessages[i].author][9] !== undefined){
+                  thetitle += ', roles: ';
+                  theusers[themessages[i].author][6].forEach(function(item,index){
+                  thetitle += '"' + theparsedserver.roles[item].name + '"';
+                  if (index != (theusers[themessages[i].author][6].length - 1)){thetitle += ', '}
+                  });
+                  }
+
+                  }
+
+                  if (theusers[themessages[i].author][7] !== undefined){
+                    usb = theusers[themessages[i].author][7];
+                    thetitle += ", badges: "
+
+                    Object.values(thebadges).forEach(function(item, index){
+                      if(usb & item){
+                        thetitle += ' "' + Object.keys(thebadges)[index] + '" ';
+                      }
+                    });
+
+                  }
+                  msbegin.title  = thetitle;
                   msbegin.appendChild(namem);
                   message.appendChild(msbegin);
 
+                  if (theusers[themessages[i].author][8] !== undefined){
+                  var status = document.createElement("span");
+                  status.className = "statuss";
+                  switch (theusers[themessages[i].author][8].presence) {
+                    case "Online":
+                      status.style.borderColor ="#477735";
+                      break;
+                    case "Busy":
+                      status.style.borderColor = "rgb(179, 48, 58)";
+                      break;
+                    case "Focus":
+                      status.style.borderColor = "rgb(104, 71, 119)";
+                      break;
+                    case "Idle":
+                      status.style.borderColor = "#c3ac31";
+                      break;
+                    default:
+                      status.style.borderColor = "#665b5b"
+                      break;
                   }
+                  status.style.borderStyle = "solid";
+                  status.style.borderWidth = "5px"
+                  message.appendChild(status);
+                  }
+                  }
+
                   }
                   samea = false;
+
+
                   }
                   else {
                    samea = true;
                   }
 
+
                   //document.getElementById("messages").innerHTML += '<span class="timeclas" title="' + new Date(ulidtodate(themessages[i]._id)) + '">('+new Date(ulidtodate(themessages[i]._id)).toLocaleTimeString()+")  </span>"
+
 
                   var time = document.createElement("span");
                   time.className = "timeclas";
@@ -881,10 +1064,16 @@ function rendermessages(){
                           }
                         });
                         reactcontent.setAttribute("onclick", "reactto('" + themessages[i]._id + "', '" + item + "')");
+                        if (!/^[\x00-\x7F]+$/g.test(item)){
+                          unimoji = document.createElement("span");
+                          unimoji.innerText = item;
+                          reactcontent.appendChild(unimoji);
+                         } else {
                         var emote = document.createElement("img");
                          emote.id = "react";
                          emote.src = "https://autumn.revolt.chat/emojis/" + item;
                          reactcontent.appendChild(emote);
+                         }
                          var emotetimes = document.createElement("span");
                          emotetimes.id = "reactcount";
                          emotetimes.innerText = themessages[i].reactions[item].length
@@ -995,9 +1184,14 @@ function rendermessages(){
               }
 }
 
-function getmessages(){
+function getmessages(nearb){
   istyping = true;
-  dorequeststuff("GET", "/channels/"+thechannel+"/messages?include_users=true",null,function a(status, response){
+  if (nearb !== undefined){
+    restofthat = "&nearby="+nearb;
+  } else {
+    restofthat = "";
+  }
+  dorequeststuff("GET", "/channels/"+thechannel+"/messages?include_users=true" + restofthat,null,function a(status, response){
     // console.log(response);
     if(status == 200){
       thething = response;
@@ -1045,7 +1239,14 @@ function getmessagelegacyolder(){
               }
               rendermessages();
               if (autoscroll == true) {
+                if (document.getElementById("messages").scrollTop == document.getElementById("messages").scrollHeight*0.75){
                 document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
+                document.getElementById("messages").style.borderBottomColor = "";
+                document.getElementById("messages").style.borderBottomWidth = "";
+                } else {
+                  document.getElementById("messages").style.borderBottomColor = "red";
+                  document.getElementById("messages").style.borderBottomWidth = "7px";
+                }
               }
 		}
 		if(getmsgsa.status === 403){
@@ -1075,14 +1276,38 @@ function cancelKeepAlive() {
   }
 }
 // Keyboard controls
-document.addEventListener('keyup', function(event){
-	if(event.key === "Escape"){
-		document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
+
+document.addEventListener('keydown', function(event){
+    if ((document.activeElement != document.getElementById("a")) || (document.activeElement != document.getElementById("edithere"))){
+    if(event.key === "q"){
+		document.getElementById("selecftt").focus();
 	}
+    if(event.key === "w"){
+		document.getElementById("messages").scrollTop -= 110;
+	}
+	if(event.key === "s"){
+		document.getElementById("messages").scrollTop += 110;
+	}
+    }
 });
 
 document.addEventListener('keyup', function(event){
-	if(event.key === "Enter"){
-      document.getElementById("send").click();
+	if(event.key === "Escape"){
+		document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
+        document.getElementById("messages").focus();
 	}
+	if(thestage != "login"){
+    if(event.key === "Enter"){
+      if (document.activeElement == document.getElementById("edithere")){
+        document.getElementById("doedit").click();
+      }
+      else {
+      document.getElementById("send").click();
+      }
+	}
+	if(event.key === "i"){
+      document.getElementById("a").focus()
+	}
+    }
 });
+
