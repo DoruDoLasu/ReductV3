@@ -920,7 +920,6 @@ function rendermessages(){
                       break;
                   }
                   status.style.borderStyle = "solid";
-                  status.style.borderWidth = "5px"
                   message.appendChild(status);
                   }
                   }
