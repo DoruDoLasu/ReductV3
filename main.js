@@ -1139,7 +1139,7 @@ function rendermessages(){
                       message.appendChild(emb);
                     }
 
-                    else if (theparsedthing.messages[i]["attachments"][i].filename.split(".")[theparsedthing.messages[i]["attachments"][i].filename.split(".").length-1] == "webp")
+                    else if (theparsedthing.messages[i]["attachments"][index].filename.split(".")[theparsedthing.messages[i]["attachments"][i].filename.split(".").length-1] == "webp")
                     {
                       emb = document.createElement("img");
                       emb.id = "emb" + index;
