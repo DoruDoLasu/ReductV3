@@ -1139,6 +1139,20 @@ function rendermessages(){
                       message.appendChild(emb);
                     }
 
+                    else if (theparsedthing.messages[i]["attachments"][i].filename.split(".")[theparsedthing.messages[i]["attachments"][i].filename.split(".").length-1] == "webp")
+                    {
+                      //document.getElementById("messages").innerHTML += '<audio controls preload="none"><source src="https://autumn.revolt.chat/attachments/' + themessages[i]["attachments"][index]["_id"] + '" type="'+themessages[i].attachments[index].content_type+'"></audio>';
+
+                      emb = document.createElement("video");
+                      emb.controls = true;
+                      emb.preload = "none";
+                      source = document.createElement("source");
+                      source.src = "https://autumn.revolt.chat/attachments/" + themessages[i]["attachments"][index]["_id"];
+                      source.type = themessages[i].attachments[index].content_type;
+                      emb.appendChild(source);
+                      message.appendChild(emb);
+                    }
+
                     else if (themessages[i]["attachments"][index].content_type == "video/ogg")
                     {
                       //document.getElementById("messages").innerHTML += '<audio controls preload="none"><source src="https://autumn.revolt.chat/attachments/' + themessages[i]["attachments"][index]["_id"] + '" type="'+themessages[i].attachments[index].content_type+'"></audio>';
