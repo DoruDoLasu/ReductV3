@@ -40,7 +40,24 @@ SOFTWARE. -->
         <h4 id="logo2">light revolt.chat client held together by duct tape and bad code</h4>
     </div>
 
-    <div id="messages"></div>
+    <div id="messages">
+      <div id="loggingin" style="text-align: center;display: grid;">
+      <input id="token"/>
+      <h4 id="logo2">ENTER TOKEN HERE and press ok</h4>
+      <button onclick="login()">ok</button>
+      <input type="checkbox" onclick="wipelocal()" id="keeptoken" name="keep">
+      <label for="keep">Keep entered token saved in localStorage of your browser (unchecking clears it)</label>
+      <h4 id="logo2">To obtain your token, paste and press enter on this in the web console (Ctrl-Shift-I) if you\'re using Revite (default Revolt chat client):
+      <p>window.state.auth.sessions.get(controllers.client.getReadyClient().user._id).session.token</p>
+      or
+      <a style="color: #BB000E" onclick="loginpass()">click here</a>
+      to login with email and password</h4>
+      <h4 id="logo2"><br/>
+      <a style="color: #BB000E" href="https://github.com/DoruDoLasu/Reduct">ReductV3 GitHub</a></h4></div>
+      <h4 id="extras">Extra options: </h4><input type="checkbox" id="scrolloff" name="scrolloff"><label for="scrolloff">Always autoscroll</label>
+
+
+    </div>
     <div id="restdiv">
     	<div id="typing"></div>
     	<div id="replyingto"></div>

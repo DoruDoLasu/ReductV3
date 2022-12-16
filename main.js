@@ -165,7 +165,32 @@ var thebadges = {
     ReservedRelevantJokeBadge2: 1024,
 }
 
-document.getElementById("messages").innerHTML = '<div id="loggingin" style="text-align: center;display: grid;"><input id="token"/><h4 id="logo2">ENTER TOKEN HERE and press ok</h4><button onclick="login()">ok</button><input type="checkbox" onclick="wipelocal()" id="keeptoken" name="keep"><label for="keep">Keep entered token saved in localStorage of your browser (unchecking clears it)</label><h4 id="logo2">To obtain your token, paste and press enter on this in the web console (Ctrl-Shift-I) if you\'re using Revite (default Revolt chat client): <p>window.state.auth.sessions.get(controllers.client.getReadyClient().user._id).session.token</p> or check out <a style="color: #BB000E" href="https://infi.sh/post/revolt-tokens">Infi\'s website</a> if you want a slower way that will work with all Revolt web clients</h4><h4 id="logo2"><br/><a style="color: #BB000E" href="https://github.com/DoruDoLasu/Reduct">ReductV3 GitHub</a></h4></div><h4 id="extras">Extra options: </h4><input type="checkbox" id="scrolloff" name="scrolloff"><label for="scrolloff">Always autoscroll</label>';
+//document.getElementById("messages").innerHTML = '<div id="loggingin" style="text-align: center;display: grid;"><input id="token"/><h4 id="logo2">ENTER TOKEN HERE and press ok</h4><button onclick="login()">ok</button><input type="checkbox" onclick="wipelocal()" id="keeptoken" name="keep"><label for="keep">Keep entered token saved in localStorage of your browser (unchecking clears it)</label><h4 id="logo2">To obtain your token, paste and press enter on this in the web console (Ctrl-Shift-I) if you\'re using Revite (default Revolt chat client): <p>window.state.auth.sessions.get(controllers.client.getReadyClient().user._id).session.token</p> or check out <a style="color: #BB000E" href="https://infi.sh/post/revolt-tokens">Infi\'s website</a> if you want a slower way that will work with all Revolt web clients</h4><h4 id="logo2"><br/><a style="color: #BB000E" href="https://github.com/DoruDoLasu/Reduct">ReductV3 GitHub</a></h4></div><h4 id="extras">Extra options: </h4><input type="checkbox" id="scrolloff" name="scrolloff"><label for="scrolloff">Always autoscroll</label>';
+
+function dologin(){
+theemail = document.getElementById("emu").value;
+thepassword = document.getElementById("pass").value;
+thenamee = document.getElementById("nam").value;
+
+thecreditials = JSON.stringify({
+                          email: theemail,
+                          password: thepassword,
+                          friendly_name: thenamee})
+console.log(thecreditials)
+dorequeststuff("POST", "/auth/session/login", thecreditials, function a(status, response){
+	thetoken = JSON.parse(response)["token"];
+    login();
+});
+}
+
+function loginpass(){
+document.getElementById("messages").innerHTML = '<h3 id="tokeno"></h3><span><span>email: </span><input id="emu"><br><span>password: </span><input id="pass" type="password"><br><span>session name: </span><input id="nam" value="ReductV3"><br><button onclick="dologin()">Login</button><input type="checkbox" onclick="wipelocal()" id="keeptoken" name="keep"><label for="keep" style="color:#000000">Keep entered token saved in localStorage of your browser</label></span><input type="checkbox" id="scrolloff" name="scrolloff"><label for="scrolloff" style="color:#000000">Always autoscroll</label>';
+
+document.getElementById("messages").style.backgroundColor = "#b9b9b9";
+}
+
+
+
 
 thestage = "login";
 
@@ -187,7 +212,9 @@ function dorequeststuff(lareq, laurl, lathing, after){
   laurl = "https://api.revolt.chat"+laurl
   var themsgsa = new XMLHttpRequest();
   themsgsa.open(lareq, laurl, true);
+  if (thetoken !== undefined){
   themsgsa.setRequestHeader("x-session-token", thetoken);
+  }
   themsgsa.setRequestHeader("Accept", "*/*");
   themsgsa.setRequestHeader("Content-Type", "application/json");
 
@@ -286,15 +313,18 @@ function wipelocal(){
 }
 
 function login() {
+  if (thetoken === undefined){
+    thetoken = document.getElementById("token").value;
+  }
   if (document.getElementById("keeptoken").checked == true ) {
-    localStorage.tokeno = document.getElementById("token").value;
+    localStorage.tokeno = thetoken;
   }
   if (document.getElementById("scrolloff").checked == true ) {
     autoscroll = true;
   }
-   thetoken = document.getElementById("token").value;
    document.getElementById("logo2").innerHTML = '';
-    document.getElementById("loggingin").innerHTML = '';
+    document.getElementById("messages").innerHTML = '';
+    document.getElementById("messages").style.backgroundColor = '';
     document.getElementById("precontrols").innerHTML = '<select id="selecftt" onchange="chchannelyes()"></select><button onclick="changeservchannel()">Home</button>';
     document.getElementById("controls").innerHTML = '<button onclick="attachprepare()" style="width: 4%">+</button><input id="a" style="width: 64%"/><button id="send" onclick="sendmessage()" style="width: 20%">==></button><button id="gett" onclick="getmessages()" style="width: 10%">Fresh</button>';
 
