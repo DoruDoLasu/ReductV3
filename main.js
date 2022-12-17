@@ -38,11 +38,17 @@ var timer = 0;
 var socket = 0;
 var thereplying = [];
 var theattachments = [];
-var autoscroll = true;
 var istyping = true;
 var isserver = false;
 
 var theparsedthing;
+
+if (localStorage.getItem("sets") === null) {
+  var thesets = {autoscroll: true, doitime: false, lointernet: false};
+  localStorage.setItem("sets", JSON.stringify(thesets))
+} else {
+  var thesets = JSON.parse(localStorage.getItem("sets"));
+}
 
 
 var theoldcustemotes = {
@@ -157,7 +163,7 @@ var thebadges = {
     Supporter: 4,
     ResponsibleDisclosure: 8,
     Founder: 16,
-    PlatformModeration: 32,
+//     PlatformModeration: 32,
     ActiveSupporter: 64,
     Paw: 128,
     EarlyAdopter: 256,
@@ -165,7 +171,19 @@ var thebadges = {
     ReservedRelevantJokeBadge2: 1024,
 }
 
-//document.getElementById("messages").innerHTML = '<div id="loggingin" style="text-align: center;display: grid;"><input id="token"/><h4 id="logo2">ENTER TOKEN HERE and press ok</h4><button onclick="login()">ok</button><input type="checkbox" onclick="wipelocal()" id="keeptoken" name="keep"><label for="keep">Keep entered token saved in localStorage of your browser (unchecking clears it)</label><h4 id="logo2">To obtain your token, paste and press enter on this in the web console (Ctrl-Shift-I) if you\'re using Revite (default Revolt chat client): <p>window.state.auth.sessions.get(controllers.client.getReadyClient().user._id).session.token</p> or check out <a style="color: #BB000E" href="https://infi.sh/post/revolt-tokens">Infi\'s website</a> if you want a slower way that will work with all Revolt web clients</h4><h4 id="logo2"><br/><a style="color: #BB000E" href="https://github.com/DoruDoLasu/Reduct">ReductV3 GitHub</a></h4></div><h4 id="extras">Extra options: </h4><input type="checkbox" id="scrolloff" name="scrolloff"><label for="scrolloff">Always autoscroll</label>';
+function timetobeats(a){
+  if (a.getUTCHours == 23){
+    thehours = 0;
+  } else {
+    thehours = a.getUTCHours()+1;
+  }
+  theminutes = a.getUTCMinutes();
+  theseconds = a.getUTCSeconds();
+  thebeats = ((((thehours*60)+theminutes)*60) + theseconds) / 86.4;
+  return "@" + thebeats.toFixed(2);
+}
+
+
 
 function dologin(){
 theemail = document.getElementById("emu").value;
@@ -239,24 +257,20 @@ function dorequeststuff(lareq, laurl, lathing, after){
 function dowebsocketstuff() {
  socket = new WebSocket('wss://ws.revolt.chat');
 
-socket.addEventListener('open', function (event) {
-              socket.send('{"type":"Authenticate","token":"'+thetoken+'"}');
-              document.getElementById("wsconnection").innerText = "WS connected";
-              document.getElementById("wsconnection").style.color = "#67CC89";
-
-              keepAlive();
-              });
-
-socket.addEventListener('close', function (event) {
-document.getElementById("wsconnection").innerText = "WS closed, press Fresh to reconnect";
-              document.getElementById("wsconnection").style.color = "#E11423";
-});
-
-socket.addEventListener('message', function (event) {
-                datta = event.data;
-
-                if (JSON.parse(datta)["type"] == "Ready") {
-                    thestage = "loggedin";
+ socket.addEventListener('open', function (event) {
+   socket.send('{"type":"Authenticate","token":"'+thetoken+'"}');
+   document.getElementById("wsconnection").innerText = "WS connected";
+   document.getElementById("wsconnection").style.color = "#67CC89";
+   keepAlive();
+ });
+ socket.addEventListener('close', function (event) {
+   document.getElementById("wsconnection").innerText = "WS closed, press Fresh to reconnect";
+   document.getElementById("wsconnection").style.color = "#E11423";
+ });
+ socket.addEventListener('message', function (event) {
+   datta = event.data;
+   if (JSON.parse(datta)["type"] == "Ready") {
+            thestage = "loggedin";
 			thefirstthing = JSON.parse(datta);
             serverlist = thefirstthing.servers;
             channellist = thefirstthing.channels;
@@ -267,43 +281,42 @@ socket.addEventListener('message', function (event) {
 
             changeservchannel();
                 }
-                if (JSON.parse(datta)["type"] == "Message" && JSON.parse(datta)["channel"] == thechannel) {
-                  thenewstuff = JSON.parse(datta);
-                  themessages = [];
-                  themessages[0] = thenewstuff;
-                  rendermessages();
-                  if (autoscroll == true){
-                    if (document.getElementById("messages").scrollTop >= document.getElementById("messages").scrollHeight*0.75){
+   if (JSON.parse(datta)["type"] == "Message" && JSON.parse(datta)["channel"] == thechannel) {
+            thenewstuff = JSON.parse(datta);
+            themessages = [];
+            themessages[0] = thenewstuff;
+            rendermessages();
+            if (thesets.autoscroll == true) {
+                if (document.getElementById("messages").scrollTop >= document.getElementById("messages").scrollHeight*0.75){
                 document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
+                document.getElementById("messages").style.borderBottomColor = "";
+                document.getElementById("messages").style.borderBottomWidth = "";
+                } else {
+                  document.getElementById("messages").style.borderBottomColor = "#8a3333";
+                  setTimeout(function(){document.getElementById("messages").style.borderBottomColor = "";}, 500)
                 }
-                  }
-                }
-                if ((JSON.parse(datta)["type"] == "MessageDelete") && (JSON.parse(datta)["channel"] == thechannel)){
-                 document.getElementById(JSON.parse(datta)["id"]).remove();
-                }
-                //if ((JSON.parse(datta)["type"] == "MessageUpdate") && (JSON.parse(datta)["channel"] == thechannel)){
-                 //edite = JSON.parse(datta);
-                 //document.getElementById(edite["id"]).innerText = //edite.;
-                //}
-                if (JSON.parse(datta)["type"] == "ChannelStartTyping" && JSON.parse(datta)["id"] == thechannel) {
-                  if (istyping == true){
-                    typtyp = JSON.parse(datta);
-                    if (theusers[typtyp.user] === undefined) {
-                    document.getElementById('typing').innerText = typtyp.user + "is typing";
-                    }
-                    else {
-                      document.getElementById('typing').innerText = theusers[typtyp.user][0] + " is typing";
-                    }
-                  }
-                }
-                if (JSON.parse(datta)["type"] == "ChannelStopTyping" && JSON.parse(datta)["id"] == thechannel) {
-                  if (istyping == true){
-                    document.getElementById('typing').innerText = '';
-                  }
-                }
+              }
+  }
+  if ((JSON.parse(datta)["type"] == "MessageDelete") && (JSON.parse(datta)["channel"] == thechannel)){
+    document.getElementById(JSON.parse(datta)["id"]).remove();
+  }
+
+  if (JSON.parse(datta)["type"] == "ChannelStartTyping" && JSON.parse(datta)["id"] == thechannel) {
+    if (istyping == true){
+      typtyp = JSON.parse(datta);
+      if (theusers[typtyp.user] === undefined) {
+        document.getElementById('typing').innerText = typtyp.user + "is typing";
+      } else {
+          document.getElementById('typing').innerText = theusers[typtyp.user][0] + " is typing";
+      }
+    }
+  }
+  if (JSON.parse(datta)["type"] == "ChannelStopTyping" && JSON.parse(datta)["id"] == thechannel) {
+      if (istyping == true){
+        document.getElementById('typing').innerText = '';
+      }
+  }
 });
-
-
 }
 
 function wipelocal(){
@@ -318,9 +331,6 @@ function login() {
   }
   if (document.getElementById("keeptoken").checked == true ) {
     localStorage.tokeno = thetoken;
-  }
-  if (document.getElementById("scrolloff").checked == true ) {
-    autoscroll = true;
   }
    document.getElementById("logo2").innerHTML = '';
     document.getElementById("messages").innerHTML = '';
@@ -359,22 +369,31 @@ function changeservchannel(){
 }
 
 function toggleset(set){
-  switch (window[set]) {
+  switch (thesets[set]) {
 	  case true:
-		window[set] = false;
+		thesets[set] = false;
 		console.log(set + " set to false");
 		break;
+      case undefined:
 	  case false:
-		window[set] = true;
+		thesets[set] = true;
 		console.log(set + " set to true");
-		break; 
+		break;
 	}
+  localStorage.setItem("sets", JSON.stringify(thesets));
+  console.log("Settings saved to localStorage");
 }
 
 function gosettings(){
-  document.getElementById("messages").innerHTML = '<button onclick="changeservchannel()">Home</button><br><input type="checkbox" id="scrolloff" name="scrolloff" onchange="toggleset(\'autoscroll\')"><label for="autoscroll">Toggle autoscroll</label>';
-  if (autoscroll == true) {
+  document.getElementById("messages").innerHTML = '<button onclick="changeservchannel()">Home</button><br><input type="checkbox" id="scrolloff" name="scrolloff" onchange="toggleset(\'autoscroll\')"><label for="autoscroll">Toggle autoscroll</label><br><input type="checkbox" id="itime" name="itime" onchange="toggleset(\'doitime\')"><label for="itime">Use Internet Time</label><br><input type="checkbox" id="lointernet" name="lointernet" onchange="toggleset(\'lointernet\')"><label for="lointernet">Low data mode (doesn\'t display avatars, attachments, embeds or emojis)</label>';
+  if (thesets.autoscroll == true) {
     document.getElementById("scrolloff").checked = true;
+  }
+  if (thesets.doitime == true) {
+    document.getElementById("itime").checked = true;
+  }
+  if (thesets.lointernet == true) {
+    document.getElementById("lointernet").checked = true;
   }
 }
 
@@ -397,15 +416,10 @@ function chserver(){
    document.getElementById("messages").style.backgroundPositionX = "100%"
   }
 
-//  theparsedserver.channels.forEach(function(item, index) {
-//    document.getElementById("selecttt").innerHTML += '<option value="' + item + //'">' + index + ': ' + item + '</option>';
-//});
-
 thenamedchannels = [];
 lefttogo = theparsedserver["channels"];
   thefirstthing.channels.forEach(function (item, index){
   if (item.server == theserver){
-        //document.getElementById("selecttt").innerHTML += '<option value="' + item._id + '">' + index + ': ' + item.name + '</option>';
         thenamedchannels[item._id] = item.name
 
 }
@@ -415,7 +429,9 @@ lefttogo = theparsedserver["channels"];
    theparsedserver["categories"].forEach(function(item, index){
      document.getElementById("selecttt").innerHTML += '<optgroup label="' + item.title + '">';
      item.channels.forEach(function(itemx,indexx){
+      if (thenamedchannels[itemx] !== undefined){
       document.getElementById("selecttt").innerHTML += '<option value="' + itemx + '">' + thenamedchannels[itemx] + '</option>';
+      }
        lefttogo.pop(itemx);
      });
      document.getElementById("selecttt").innerHTML += '</optgroup>'
@@ -525,9 +541,18 @@ function highlight(id){
   setTimeout(function() {document.getElementById(id).style.backgroundColor = null;}, 2000);
   } else {
     console.log("failed to highlight, not on here");
-    getmessages(id);
+    getmessages(1,id);
     setTimeout(function() {highlight(id);}, 1000);
   }
+}
+
+function getuser(id){
+  dorequeststuff("GET", "/users/"+id, null, function(status, response){
+    if(status == 200){
+    console.log(response);
+  }
+
+  });
 }
 
 function ulidtodate(ulid){
@@ -743,6 +768,7 @@ function rendermessages(){
                       theusers[theparsedthing.users[i]._id][1] = "nope";
                     }
 
+                    if (theparsedthing.members !== undefined){
                     theparsedthing.members.forEach(function(item,index){if(item._id.user == theparsedthing.users[i]._id){
                       theusers[theparsedthing.users[i]._id][2] = item.joined_at;
 
@@ -773,7 +799,7 @@ function rendermessages(){
                       }
 
 
-                      }});
+                      }});}
 
                       theparsedthing.users.forEach(function(item,index){if(item._id == theparsedthing.users[i]._id){
                       if (item.badges !== undefined){
@@ -815,7 +841,6 @@ function rendermessages(){
                   }
 
                   else if (theusers[themessages[i].author] === undefined){
-                   // document.getElementById("messages").innerHTML += '<div id="'+themessages[i]._id+'" class="nmsgtop">'+'<span style="color: #764347">'+ themessages[i].author +' (press Fresh to get) 2</span>';
 
                     message.className = "nmsgtop";
                     var msbegin = document.createElement("span");
@@ -825,7 +850,6 @@ function rendermessages(){
 
                   } else {
                   if (theusers[themessages[i].author][1] == "nope") {
-                   //document.getElementById("messages").innerHTML += '<div id="'+themessages[i]._id+'" class="nmsgtop">'+'<span class="author">'+theusers[themessages[i].author][0]+'</span>';
 
                    message.className = "nmsgtop";
                    var msbegin = document.createElement("span");
@@ -835,15 +859,16 @@ function rendermessages(){
                   }
 
                   else if (themessages[i].masquerade !== undefined) {
-                  //document.getElementById("messages").innerHTML += '<div id="'+themessages[i]._id+'" class="nmsgtop"><span class="maskedauthor"><img class="pfp" src="https://jan.revolt.chat/proxy?url=' + themessages[i].masquerade.avatar + '">' + themessages[i].masquerade.name +  ' (masked '+theusers[themessages[i].author][0]+')</span>';
 
                   message.className = "nmsgtop";
                   var msbegin = document.createElement("span");
                   msbegin.className = "maskedauthor";
+                  if (!thesets.lointernet){
                   pfp = document.createElement("img");
                   pfp.className = "pfp";
                   pfp.src = 'https://jan.revolt.chat/proxy?url=' + themessages[i].masquerade.avatar;
                   msbegin.appendChild(pfp);
+                  }
                   namem = document.createElement("span");
                   namem.innerText = themessages[i].masquerade.name + " (masked "+theusers[themessages[i].author][0]+" )";
                   msbegin.appendChild(namem);
@@ -853,7 +878,6 @@ function rendermessages(){
                   }
 
                   else {
-                  //document.getElementById("messages").innerHTML += '<div id="'+themessages[i]._id+'"  class="nmsgtop">'+'<span class="author"><img class="pfp" src="https://autumn.revolt.chat/avatars/'+ theusers[themessages[i].author][1] +'?max_side=32"/>'+theusers[themessages[i].author][0]+'</span>';
 
                   if (themessages[i].author == theparsedserver.owner){
                   var ownercrown = document.createElement("span");
@@ -876,6 +900,7 @@ function rendermessages(){
                   msbegin.className = "author";
                   msbegin.id = themessages[i].author;
                   //msbegin.setAttribute("onClick",'document.getElementById("messages").innerHTML = "";');
+                  if (!thesets.lointernet){
                   pfp = document.createElement("img");
                   pfp.className = "pfp";
                   if (theusers[themessages[i].author][5] !== undefined){
@@ -885,6 +910,7 @@ function rendermessages(){
                   pfp.src = 'https://autumn.revolt.chat/avatars/'+ theusers[themessages[i].author][1] +'?max_side=32';
                   }
                   msbegin.appendChild(pfp);
+                  }
                   namem = document.createElement("span");
                   if (theusers[themessages[i].author][4] !== undefined){
                   namem.innerText = theusers[themessages[i].author][4];
@@ -904,10 +930,14 @@ function rendermessages(){
                   }}
 
                   // I'll be honest, I have no idea why this one if undefined is needed, but ok
-                  if (theusers[themessages[i].author][9] !== undefined){
+                  if (theusers[themessages[i].author][6] !== undefined){
                   thetitle += ', roles: ';
                   theusers[themessages[i].author][6].forEach(function(item,index){
+                  if (theparsedserver.roles[item] != undefined){
                   thetitle += '"' + theparsedserver.roles[item].name + '"';
+                  } else {
+                  thetitle += '"' + item + '"';
+                  }
                   if (index != (theusers[themessages[i].author][6].length - 1)){thetitle += ', '}
                   });
                   }
@@ -956,32 +986,26 @@ function rendermessages(){
 
                   }
                   samea = false;
-
-
                   }
                   else {
                    samea = true;
                   }
 
-
-                  //document.getElementById("messages").innerHTML += '<span class="timeclas" title="' + new Date(ulidtodate(themessages[i]._id)) + '">('+new Date(ulidtodate(themessages[i]._id)).toLocaleTimeString()+")  </span>"
-
-
                   var time = document.createElement("span");
                   time.className = "timeclas";
-                  time.title = new Date(ulidtodate(themessages[i]._id));
-                  time.innerText = " (" + new Date(ulidtodate(themessages[i]._id)).toLocaleTimeString() + ")"
+                  datae = new Date(ulidtodate(themessages[i]._id));
+                  time.title = datae;
+                  if (thesets.doitime === true){
+                  time.innerText = timetobeats(datae);
+                  } else {
+                  time.innerText = " (" + datae.toLocaleTimeString() + ")"
+                  }
                   message.appendChild(time);
                   if (samea == false){
                     message.appendChild(document.createElement('br'));
                   }
 
                   if (themessages[i].replies !== undefined) {
-                    //document.getElementById("messages").innerHTML += '<span style="color: #ffffff">replies to </span>';
-                    //for (rep=0;rep<themessages[i].replies.length;rep++){
-                    //document.getElementById("messages").innerHTML += '<a href="#' + themessages[i].replies[rep] + '" onclick="highlight(\''+themessages[i].replies[rep]+'\')">['+(rep+1)+']</a> ';
-                    //}
-
                     replies = document.createElement("span");
                     replies.style = "color: #ffffff";
                     replies.innerHTML = "replies to: ";
@@ -990,16 +1014,14 @@ function rendermessages(){
                     message.appendChild(replies);
                     }
                   }
-
-                  //document.getElementById("messages").innerHTML += ' <span class="deleto" onclick="deletemessage(\'' + themessages[i]._id + '\')">[delete]</span><span class="replyto" onclick="repply(\'' + themessages[i]._id + '\')">[reply]</span>' + '<span class="replyto" onclick="reacttopre(\'' + themessages[i]._id + '\')">[react]</span>' + '<span class="replyto" onclick="editprepare(\'' + themessages[i]._id + '\')">[edit] </span>';
-
                   message.innerHTML += '<span class="deleto" onclick="deletemessage(\'' + themessages[i]._id + '\')">[delete]</span><span class="replyto" onclick="repply(\'' + themessages[i]._id + '\')">[reply]</span>' + '<span class="replyto" onclick="reacttopre(\'' + themessages[i]._id + '\')">[react]</span>' + '<span class="replyto" onclick="editprepare(\'' + themessages[i]._id + '\')">[edit] </span>';
 
 
 
                   if (themessages[i].content !== undefined) {
 
-                  if (themessages[i].content.split(":").length > 2) {
+
+                  if ((themessages[i].content.split(":").length > 2) && !(thesets.lointernet)) {
                     var mscontent = document.createElement("h5");
                         mscontent.id = "content";
                         msgmote = themessages[i].content.split(":");
@@ -1019,6 +1041,15 @@ function rendermessages(){
                           var emote = document.createElement("img");
                           emote.id = "emoji";
                           emote.src = "https://autumn.revolt.chat/emojis/01G7KXGW83G5EGFWX7ASMJ04Q7";
+                          mscontent1.appendChild(emote);
+                          mscontent.appendChild(mscontent1);
+                      }
+                      else if ((index % 2 !=0) && item == "wires") {
+                          var mscontent1 = document.createElement("span");
+                          mscontent1.class = "emoji";
+                          var emote = document.createElement("img");
+                          emote.id = "emoji";
+                          emote.src = "https://autumn.revolt.chat/emojis/01GJTC4RD6XAJXRAAM30KW25VD";
                           mscontent1.appendChild(emote);
                           mscontent.appendChild(mscontent1);
                       }
@@ -1044,17 +1075,13 @@ function rendermessages(){
 
 
                     });
-                    //document.getElementById("messages").appendChild(mscontent);
                     message.appendChild(mscontent);
-                    //document.getElementById("messages").innerHTML += '</div>';
                   }
                    else {
                   var mscontent = document.createElement("h5");
                   mscontent.id = "content";
                   mscontent.innerText = themessages[i].content;
-                  //document.getElementById("messages").appendChild(mscontent);
                   message.appendChild(mscontent);
-                  //document.getElementById("messages").innerHTML += '</div>';
                    }
                   }
 
@@ -1062,7 +1089,6 @@ function rendermessages(){
                     var mscontent = document.createElement("h5");
                     mscontent.id = "content";
                     mscontent.innerText = themessages[i].system.type + "  " + themessages[i].system.id;
-                    //document.getElementById("messages").appendChild(mscontent);
                     message.appendChild(mscontent);
                   }
 
@@ -1074,8 +1100,7 @@ function rendermessages(){
                       if (item.colour !== undefined) {
                        embcontent.style.borderColor = item.colour;
                       }
-                      //document.getElementById("messages").appendChild(embcontent);
-                      message.appendChild(mscontent);
+                      message.appendChild(embcontent);
                       });
                     }
 
@@ -1093,7 +1118,7 @@ function rendermessages(){
                           }
                         });
                         reactcontent.setAttribute("onclick", "reactto('" + themessages[i]._id + "', '" + item + "')");
-                        if (!/^[\x00-\x7F]+$/g.test(item)){
+                        if ((!/^[\x00-\x7F]+$/g.test(item)) || (thesets.lointernet)){
                           unimoji = document.createElement("span");
                           unimoji.innerText = item;
                           reactcontent.appendChild(unimoji);
@@ -1107,7 +1132,6 @@ function rendermessages(){
                          emotetimes.id = "reactcount";
                          emotetimes.innerText = themessages[i].reactions[item].length
                          reactcontent.appendChild(emotetimes);
-                         //document.getElementById("messages").appendChild(reactcontent);
                          message.appendChild(reactcontent);
                     });
 
@@ -1117,96 +1141,80 @@ function rendermessages(){
 
                   if (themessages[i].attachments !== undefined){
                     themessages[i].attachments.forEach(function(item, index) {
+                        att = document.createElement("h5")
+                        att.id = "filename";
+                        atnam = document.createElement("span");
+                        atnam.innerText = themessages[i]["attachments"][index]["filename"];
+                        att.appendChild(atnam);
+                        ahr = document.createElement("a");
+                        ahr.href = 'https://autumn.revolt.chat/attachments/' + themessages[i]["attachments"][index]["_id"];
+                        ahr.target = "_blank"
+                        ahr.rel = "noopener noreferrer"
+                        ahr.innerText = "⇓"
+                        att.appendChild(ahr);
+                        message.appendChild(att);
 
-                    //document.getElementById("messages").innerHTML += '<h5 id="filename">'+themessages[i]["attachments"][index]["filename"]+' <a href="https://autumn.revolt.chat/attachments/' + themessages[i]["attachments"][index]["_id"] + '" target="_blank" rel="noopener noreferrer">⇓</a></h5>';
+                    if (!thesets.lointernet){
 
-                    att = document.createElement("h5")
-                    att.id = "filename";
-                    atnam = document.createElement("span");
-                    atnam.innerText = themessages[i]["attachments"][index]["filename"];
-                    att.appendChild(atnam);
-                    ahr = document.createElement("a");
-                    ahr.href = 'https://autumn.revolt.chat/attachments/' + themessages[i]["attachments"][index]["_id"];
-                    ahr.target = "_blank"
-                    ahr.rel = "noopener noreferrer"
-                    ahr.innerText = "⇓"
-                    att.appendChild(ahr);
-                    message.appendChild(att);
+                    switch (themessages[i]["attachments"][index]["metadata"]["type"]) {
+                      case "Image":
+                        emb = document.createElement("img");
+                        emb.id = "emb" + index;
+                        emb.className = "embed";
+                        emb.src = "https://autumn.revolt.chat/attachments/" + themessages[i]["attachments"][index]["_id"];
+                        message.appendChild(emb);
+                      break;
 
-                    if (themessages[i]["attachments"][index]["metadata"]["type"] == "Image") {
-                      //document.getElementById("messages").innerHTML += '<img class="embed" src="https://autumn.revolt.chat/attachments/' + themessages[i]["attachments"][index]["_id"] + '"></img>';
+                      case "Audio":
+                        emb = document.createElement("audio");
+                        emb.controls = true;
+                        emb.preload = "none";
+                        source = document.createElement("source");
+                        source.src = "https://autumn.revolt.chat/attachments/" + themessages[i]["attachments"][index]["_id"];
+                        source.type = themessages[i].attachments[index].content_type;
+                        emb.appendChild(source);
+                        message.appendChild(emb);
+                        break;
 
-                      emb = document.createElement("img");
-                      emb.id = "emb" + index;
-                      emb.className = "embed";
-                      emb.src = "https://autumn.revolt.chat/attachments/" + themessages[i]["attachments"][index]["_id"];
-                      message.appendChild(emb)
+                      case "Video":
+                        emb = document.createElement("video");
+                        emb.controls = true;
+                        emb.preload = "none";
+                        source = document.createElement("source");
+                        source.src = "https://autumn.revolt.chat/attachments/" + themessages[i]["attachments"][index]["_id"];
+                        source.type = themessages[i].attachments[index].content_type;
+                        emb.appendChild(source);
+                        message.appendChild(emb);
+                        break;
+                      default:
+                        if (theparsedthing.messages[i]["attachments"][index].filename.split(".")[theparsedthing.messages[i]["attachments"][index].filename.split(".").length-1] == "webp") {
+                          emb = document.createElement("img");
+                          emb.id = "emb" + index;
+                          emb.className = "embed";
+                          emb.src = "https://autumn.revolt.chat/attachments/" + themessages[i]["attachments"][index]["_id"];
+                          message.appendChild(emb)
+                        }
+                        else if (themessages[i]["attachments"][index].content_type == "video/ogg") {
+                          emb = document.createElement("video");
+                          emb.controls = true;
+                          emb.preload = "none";
+                          source = document.createElement("source");
+                          source.src = "https://autumn.revolt.chat/attachments/" + themessages[i]["attachments"][index]["_id"];
+                          source.type = themessages[i].attachments[index].content_type;
+                          emb.appendChild(source);
+                          message.appendChild(emb);
+                        }
+                        else if (themessages[i]["attachments"][index].content_type == "application/x-riff") {
+                          emb = document.createElement("audio");
+                          emb.controls = true;
+                          emb.preload = "none";
+                          source = document.createElement("source");
+                          source.src = "https://autumn.revolt.chat/attachments/" + themessages[i]["attachments"][index]["_id"];
+                          source.type = "audio/wav";
+                          emb.appendChild(source);
+                          message.appendChild(emb);
+                        }}
                     }
-
-                    else if (themessages[i]["attachments"][index]["metadata"]["type"] == "Audio") {
-                      //document.getElementById("messages").innerHTML += '<audio controls preload="none"><source src="https://autumn.revolt.chat/attachments/' + themessages[i]["attachments"][index]["_id"] + '" type="'+themessages[i].attachments[index].content_type+'"></audio>';
-
-                      emb = document.createElement("audio");
-                      emb.controls = true;
-                      emb.preload = "none";
-                      source = document.createElement("source");
-                      source.src = "https://autumn.revolt.chat/attachments/" + themessages[i]["attachments"][index]["_id"];
-                      source.type = themessages[i].attachments[index].content_type;
-                      emb.appendChild(source);
-                      message.appendChild(emb);
-                    }
-
-                    else if (themessages[i]["attachments"][index]["metadata"]["type"] == "Video") {
-                      //document.getElementById("messages").innerHTML += '<video controls preload="none"><source src="https://autumn.revolt.chat/attachments/' + themessages[i]["attachments"][index]["_id"] + '" type="'+themessages[i].attachments[index].content_type+'"></video>';
-
-                      emb = document.createElement("video");
-                      emb.controls = true;
-                      emb.preload = "none";
-                      source = document.createElement("source");
-                      source.src = "https://autumn.revolt.chat/attachments/" + themessages[i]["attachments"][index]["_id"];
-                      source.type = themessages[i].attachments[index].content_type;
-                      emb.appendChild(source);
-                      message.appendChild(emb);
-                    }
-
-                    else if (theparsedthing.messages[i]["attachments"][index].filename.split(".")[theparsedthing.messages[i]["attachments"][i].filename.split(".").length-1] == "webp")
-                    {
-                      emb = document.createElement("img");
-                      emb.id = "emb" + index;
-                      emb.className = "embed";
-                      emb.src = "https://autumn.revolt.chat/attachments/" + themessages[i]["attachments"][index]["_id"];
-                      message.appendChild(emb)
-                    }
-
-                    else if (themessages[i]["attachments"][index].content_type == "video/ogg")
-                    {
-                      //document.getElementById("messages").innerHTML += '<audio controls preload="none"><source src="https://autumn.revolt.chat/attachments/' + themessages[i]["attachments"][index]["_id"] + '" type="'+themessages[i].attachments[index].content_type+'"></audio>';
-
-                      emb = document.createElement("video");
-                      emb.controls = true;
-                      emb.preload = "none";
-                      source = document.createElement("source");
-                      source.src = "https://autumn.revolt.chat/attachments/" + themessages[i]["attachments"][index]["_id"];
-                      source.type = themessages[i].attachments[index].content_type;
-                      emb.appendChild(source);
-                      message.appendChild(emb);
-                    }
-
-                    else if (themessages[i]["attachments"][index].content_type == "application/x-riff")
-                    {
-                      //document.getElementById("messages").innerHTML += '<audio controls preload="none"><source src="https://autumn.revolt.chat/attachments/' + themessages[i]["attachments"][index]["_id"] + '" type="audio/wav"></audio>';
-
-                      emb = document.createElement("audio");
-                      emb.controls = true;
-                      emb.preload = "none";
-                      source = document.createElement("source");
-                      source.src = "https://autumn.revolt.chat/attachments/" + themessages[i]["attachments"][index]["_id"];
-                      source.type = "audio/wav";
-                      emb.appendChild(source);
-                      message.appendChild(emb);
-
-                    }
-
 
                     });
 
@@ -1222,10 +1230,16 @@ function rendermessages(){
               }
 }
 
-function getmessages(nearb){
+function getmessages(nearb, messid){
   istyping = true;
   if (nearb !== undefined){
-    restofthat = "&nearby="+nearb;
+    if (nearb == 0){
+      restofthat = "&before="+messid;
+    } else if (nearb == 1){
+      restofthat = "&nearby="+messid;
+    } else if (nearb == 2) {
+      restofthat = "&after="+messid;
+      }
   } else {
     restofthat = "";
   }
@@ -1260,45 +1274,8 @@ function getmessages(nearb){
 }
 
 function getmessagelegacyolder(){
-  var getmsgsa = new XMLHttpRequest();
-  getmsgsa.open("GET", "https://api.revolt.chat/channels/"+thechannel+"/messages?include_users=true&before="+firstmessage, true);
-  getmsgsa.setRequestHeader("x-session-token", thetoken);
-  getmsgsa.setRequestHeader("Accept", "*/*");
-  getmsgsa.onreadystatechange = function() {
-      if(getmsgsa.readyState === 4){
-          if(getmsgsa.status === 200){
-              thething = getmsgsa.responseText;
-              theparsedthing = JSON.parse(thething);
-              themessages = themessages.concat(theparsedthing.messages);
-              document.getElementById("messages").innerHTML = '';
-
-              if (socket.readyState == 3) {
-               dowebsocketstuff();
-              }
-              rendermessages();
-              if (autoscroll == true) {
-                if (document.getElementById("messages").scrollTop == document.getElementById("messages").scrollHeight*0.75){
-                document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
-                document.getElementById("messages").style.borderBottomColor = "";
-                document.getElementById("messages").style.borderBottomWidth = "";
-                } else {
-                  document.getElementById("messages").style.borderBottomColor = "red";
-                  document.getElementById("messages").style.borderBottomWidth = "7px";
-                }
-              }
-		}
-		if(getmsgsa.status === 403){
-            console.log("Getting the channel messages failed");
-            document.getElementById("replyingto").innerHTML = '<span style="color: #E64040">You cannot access this channel (lack of permissions?) -> ('+ thechannel +')</span>';
-            setTimeout(function () { document.getElementById("replyingto").innerText = '';  }, 3000);
-		}
-	}
-};
-getmsgsa.send(null);
+  getmessages(0, firstmessage);
 }
-
-
-
 
 // WS related
 function keepAlive() {
@@ -1315,8 +1292,8 @@ function cancelKeepAlive() {
 }
 // Keyboard controls
 
-document.addEventListener('keydown', function(event){
-    if ((document.activeElement != document.getElementById("a")) || (document.activeElement != document.getElementById("edithere"))){
+/* document.addEventListener('keydown', function(event){
+   if ((document.activeElement != document.getElementById("a")) || (document.activeElement != document.getElementById("edithere"))){
     if(event.key === "q"){
 		document.getElementById("selecftt").focus();
 	}
@@ -1327,7 +1304,7 @@ document.addEventListener('keydown', function(event){
 		document.getElementById("messages").scrollTop += 110;
 	}
     }
-});
+});*/
 
 document.addEventListener('keyup', function(event){
 	if(event.key === "Escape"){
