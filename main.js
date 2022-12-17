@@ -163,7 +163,7 @@ var thebadges = {
     Supporter: 4,
     ResponsibleDisclosure: 8,
     Founder: 16,
-//     PlatformModeration: 32,
+    PlatformModeration: 32,
     ActiveSupporter: 64,
     Paw: 128,
     EarlyAdopter: 256,
