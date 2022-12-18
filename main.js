@@ -825,6 +825,7 @@ function rendermessages(){
 
                   var message = document.createElement("div");
                   message.id = themessages[i]._id;
+		  message.class = "message";
 
                   // THE MESSAGE AUTHOR
 
