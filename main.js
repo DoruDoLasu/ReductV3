@@ -964,22 +964,25 @@ function rendermessages(){
                   status.className = "statuss";
                   switch (theusers[themessages[i].author][8].presence) {
                     case "Online":
-                      status.style.borderColor ="#477735";
+                      status.style.color ="#477735";
                       break;
                     case "Busy":
-                      status.style.borderColor = "rgb(179, 48, 58)";
+                      status.style.color = "rgb(179, 48, 58)";
                       break;
                     case "Focus":
-                      status.style.borderColor = "rgb(104, 71, 119)";
+                      status.style.color = "rgb(104, 71, 119)";
                       break;
                     case "Idle":
-                      status.style.borderColor = "#c3ac31";
+                      status.style.color = "#c3ac31";
                       break;
                     default:
-                      status.style.borderColor = "#665b5b"
+                      status.style.color = "#665b5b"
                       break;
                   }
                   status.style.borderStyle = "solid";
+	          status.style.width = "5px";
+	          status.style.height = "5px";
+		  status.style.display = "inline-block";
                   message.appendChild(status);
                   }
                   }
