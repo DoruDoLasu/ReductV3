@@ -1011,13 +1011,13 @@ function rendermessages(){
                   if (themessages[i].replies !== undefined) {
                     replies = document.createElement("span");
                     replies.style = "color: #ffffff";
-                    replies.innerHTML = "replies to: ";
+                    replies.innerHTML = "=>";
                     for (rep=0;rep<themessages[i].replies.length;rep++){
                     replies.innerHTML += '<a href="#' + themessages[i].replies[rep] + '" onclick="highlight(\''+themessages[i].replies[rep]+'\')">['+(rep+1)+']</a> ';
                     message.appendChild(replies);
                     }
                   }
-                  message.innerHTML += '<span class="deleto" onclick="deletemessage(\'' + themessages[i]._id + '\')">[delete]</span><span class="replyto" onclick="repply(\'' + themessages[i]._id + '\')">[reply]</span>' + '<span class="replyto" onclick="reacttopre(\'' + themessages[i]._id + '\')">[react]</span>' + '<span class="replyto" onclick="editprepare(\'' + themessages[i]._id + '\')">[edit] </span>';
+                  message.innerHTML += '<div class="messagontrols"><span class="deleto" onclick="deletemessage(\'' + themessages[i]._id + '\')">[delete]</span><span class="replyto" onclick="repply(\'' + themessages[i]._id + '\')">[reply]</span>' + '<span class="replyto" onclick="reacttopre(\'' + themessages[i]._id + '\')">[react]</span>' + '<span class="replyto" onclick="editprepare(\'' + themessages[i]._id + '\')">[edit] </span></div>';
 
 
 
