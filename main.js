@@ -825,7 +825,7 @@ function rendermessages(){
 
                   var message = document.createElement("div");
                   message.id = themessages[i]._id;
-		  message.class = "message";
+		  message.className = "message";
 
                   // THE MESSAGE AUTHOR
 
@@ -834,7 +834,7 @@ function rendermessages(){
                   if (lastprocessedauthor !== themessages[i].author || themessages[i].masquerade !== undefined) {
 
                   if (themessages[i].system !== undefined) {
-                    message.className = "nmsgtop";
+                    message.className += " nmsgtop";
                     var msbegin = document.createElement("span");
                     msbegin.class = "system";
                     msbegin.innerHTML = "SYSTEM (!!!)";
@@ -843,7 +843,7 @@ function rendermessages(){
 
                   else if (theusers[themessages[i].author] === undefined){
 
-                    message.className = "nmsgtop";
+                    message.className += " nmsgtop";
                     var msbegin = document.createElement("span");
                     msbegin.style = "color: #764347";
                     msbegin.innerText = themessages[i].author + " (press Fresh to get)";
@@ -852,7 +852,7 @@ function rendermessages(){
                   } else {
                   if (theusers[themessages[i].author][1] == "nope") {
 
-                   message.className = "nmsgtop";
+                   message.className += " nmsgtop";
                    var msbegin = document.createElement("span");
                    msbegin.className = "author";
                    msbegin.innerText = theusers[themessages[i].author][0];
@@ -861,7 +861,7 @@ function rendermessages(){
 
                   else if (themessages[i].masquerade !== undefined) {
 
-                  message.className = "nmsgtop";
+                  message.className += " nmsgtop";
                   var msbegin = document.createElement("span");
                   msbegin.className = "maskedauthor";
                   if (!thesets.lointernet){
@@ -896,7 +896,7 @@ function rendermessages(){
                   message.appendChild(botcrown);
                   }
 
-                  message.className = "nmsgtop";
+                  message.className += " nmsgtop";
                   var msbegin = document.createElement("span");
                   msbegin.className = "author";
                   msbegin.id = themessages[i].author;
