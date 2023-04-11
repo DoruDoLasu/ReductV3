@@ -1,6 +1,6 @@
 /* MIT License
 
-Copyright (c) 2022 DoruDoLasu
+Copyright (c) 2022-2023 DoruDoLasu
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -227,7 +227,9 @@ if (thechannel === undefined) {
 }
 
 function dorequeststuff(lareq, laurl, lathing, after){
-  laurl = "https://api.revolt.chat"+laurl
+  if (laurl[0] == "/"){
+  	laurl = "https://api.revolt.chat"+laurl
+  }
   var themsgsa = new XMLHttpRequest();
   themsgsa.open(lareq, laurl, true);
   if (thetoken !== undefined){
