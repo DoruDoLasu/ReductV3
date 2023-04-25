@@ -1000,7 +1000,7 @@ function rendermessages(){
                   if (themessages[i].replies !== undefined) {
                     replies = document.createElement("span");
                     replies.style = "color: #ffffff";
-                    replies.innerHTML = "=>";
+                    replies.innerHTML = " ";
                     for (rep=0;rep<themessages[i].replies.length;rep++){
                     replies.innerHTML += '<a href="#' + themessages[i].replies[rep] + '" onclick="highlight(\''+themessages[i].replies[rep]+'\')">['+(rep+1)+']</a> ';
                     message.appendChild(replies);
