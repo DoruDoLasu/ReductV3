@@ -991,10 +991,6 @@ function rendermessages(){
                   }
 
                   }
-                  samea = false;
-                  }
-                  else {
-                   samea = true;
                   }
 
                   if (themessages[i].replies !== undefined) {
@@ -1016,9 +1012,6 @@ function rendermessages(){
                   time.innerText = " (" + datae.toLocaleTimeString() + ")"
                   }
                   message.appendChild(time);
-                  if (samea == false){
-                    message.appendChild(document.createElement('br'));
-                  }
                   message.innerHTML += '<div class="messagontrols"><span class="deleto" onclick="deletemessage(\'' + themessages[i]._id + '\')">[delete]</span><span class="replyto" onclick="repply(\'' + themessages[i]._id + '\')">[reply]</span>' + '<span class="replyto" onclick="reacttopre(\'' + themessages[i]._id + '\')">[react]</span>' + '<span class="replyto" onclick="editprepare(\'' + themessages[i]._id + '\')">[edit] </span></div>';
 
 
