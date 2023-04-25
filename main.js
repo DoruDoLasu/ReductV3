@@ -885,8 +885,16 @@ function rendermessages(){
                   if (themessages[i].author == theparsedserver.owner){
                   var ownercrown = document.createElement("span");
                   ownercrown.innerText = "♕";
-                  ownercrown.style.color = "#c1c14e";
+		  if (theusers[themessages[i].author][9] !== undefined){
+                  if (theparsedserver.roles[theusers[themessages[i].author][9]] !== undefined){
+                  if (theparsedserver.roles[theusers[themessages[i].author][9]].colour !== undefined){
+                  	ownercrown.style.color = theparsedserver.roles[theusers[themessages[i].author][9]].colour;
+		  } else {
+			ownercrown.style.color = "#c1c14e";  
+		  }
                   ownercrown.style.border = "1px solid"
+		  ownercrown.style.borderRadius = "38%"
+		  ownercrown.style.float = "left";
                   message.appendChild(ownercrown);
                   }
 
