@@ -30,44 +30,7 @@ SOFTWARE. -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ReductV3</title>
   <link rel="icon" type="image/x-icon" href="favicon.ico">
-</head>
-
-<body>
-    <div id="firstdiv">
-        <h1 id="logo">ReductV3</h1>
-        <span id="wsconnection"></span>
-        <span id="precontrols"></span>
-        <h4 id="logo2">light revolt.chat client held together by duct tape and bad code</h4>
-    </div>
-
-    <div id="messages">
-      <div id="loggingin" style="text-align: center;display: grid;">
-      <input id="token"/>
-      <h4 id="logo2">ENTER TOKEN HERE and press ok</h4>
-      <button onclick="login()">ok</button>
-      <input type="checkbox" onclick="wipelocal()" id="keeptoken" name="keep">
-      <label for="keep">Keep entered token saved in localStorage of your browser (unchecking clears it)</label>
-      <h4 id="logo2">To obtain your token, paste and press enter on this in the web console (Ctrl-Shift-I) if you\'re using Revite (default Revolt chat client):
-      <p>window.state.auth.sessions.get(controllers.client.getReadyClient().user._id).session.token</p>
-      or
-      <a style="color: #BB000E" onclick="loginpass()">click here</a>
-      to login with email and password</h4>
-      <h4 id="logo2"><br/>
-      <a style="color: #BB000E" href="https://github.com/DoruDoLasu/ReductV3">ReductV3 GitHub</a></h4></div>
-
-
-    </div>
-    <div id="restdiv">
-    	<div id="typing"></div>
-    	<div id="replyingto"></div>
-	<div id="allcontrols" style="text-align: center;">
-    		<span id="controls">
-   	 	</span>
-    	</div>
-	<div id="changechannel" style="test-align: center;">
-    </div>
-
-
+  <script src="main.js"></script>
   <style>
     .messagontrols {float: right}
     .message {background-color: #3737374f}
@@ -109,6 +72,41 @@ SOFTWARE. -->
 
     body {background-color: #242424}
   </style>
-<script src="main.js"></script>
+</head>
+
+<body>
+    <div id="firstdiv">
+        <h1 id="logo">ReductV3</h1>
+        <span id="wsconnection"></span>
+        <span id="precontrols"></span>
+        <h4 id="logo2">light revolt.chat client held together by duct tape and bad code</h4>
+    </div>
+
+    <div id="messages">
+      <div id="loggingin" style="text-align: center;display: grid;">
+      <input id="token"/>
+      <h4 id="logo2">ENTER TOKEN HERE and press ok</h4>
+      <button onclick="login()">ok</button>
+      <input type="checkbox" onclick="wipelocal()" id="keeptoken" name="keep">
+      <label for="keep">Keep entered token saved in localStorage of your browser (unchecking clears it)</label>
+      <h4 id="logo2">To obtain your token, paste and press enter on this in the web console (Ctrl-Shift-I) if you\'re using Revite (default Revolt chat client):
+      <p>window.state.auth.sessions.get(controllers.client.getReadyClient().user._id).session.token</p>
+      or
+      <a style="color: #BB000E" onclick="loginpass()">click here</a>
+      to login with email and password</h4>
+      <h4 id="logo2"><br/>
+      <a style="color: #BB000E" href="https://github.com/DoruDoLasu/ReductV3">ReductV3 GitHub</a></h4></div>
+
+
+    </div>
+    <div id="restdiv">
+    	<div id="typing"></div>
+    	<div id="replyingto"></div>
+	<div id="allcontrols" style="text-align: center;">
+    		<span id="controls">
+   	 	</span>
+    	</div>
+	<div id="changechannel" style="test-align: center;">
+    </div>
 </body>
 </html>
