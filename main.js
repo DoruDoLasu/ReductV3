@@ -338,7 +338,7 @@ function login() {
     document.getElementById("messages").innerHTML = '';
     document.getElementById("messages").style.backgroundColor = '';
     document.getElementById("precontrols").innerHTML = '<select id="selecftt" onchange="chchannelyes()"></select><button onclick="changeservchannel()">Home</button>';
-    document.getElementById("controls").innerHTML = '<button onclick="attachprepare()" style="width: 4%">+</button><input id="a" style="width: 64%"/><button id="send" onclick="sendmessage()" style="width: 20%">==></button><button id="gett" onclick="getmessages()" style="width: 10%">Fresh</button>';
+    document.getElementById("controls").innerHTML = '<button onclick="attachprepare()">+</button><input id="a" style="width: 64%"/><button id="send" onclick="sendmessage()" style="width: 20%">==></button><button id="gett" onclick="getmessages()">Fresh</button>';
 
 
 
