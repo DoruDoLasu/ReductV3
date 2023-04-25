@@ -892,6 +892,8 @@ function rendermessages(){
 		  } else {
 			ownercrown.style.color = "#c1c14e";  
 		  }
+		  }
+		  }
                   ownercrown.style.border = "1px solid"
 		  ownercrown.style.borderRadius = "38%"
 		  ownercrown.style.float = "left";
