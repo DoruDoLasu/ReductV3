@@ -337,7 +337,7 @@ function login() {
    document.getElementById("logo2").innerHTML = '';
     document.getElementById("messages").innerHTML = '';
     document.getElementById("messages").style.backgroundColor = '';
-    document.getElementById("precontrols").innerHTML = '<select id="selecftt" onchange="chchannelyes()"></select><button onclick="changeservchannel()">Home</button>';
+    document.getElementById("precontrols").innerHTML = '<select id="selecftt" onchange="chchannelyes()" style="width: 30vw;"></select><button onclick="changeservchannel()">Home</button>';
     document.getElementById("controls").innerHTML = '<button onclick="attachprepare()">+</button><input id="a" style="width: 64%"/><button id="send" onclick="sendmessage()" style="width: 20%">==></button><button id="gett" onclick="getmessages()">Fresh</button>';
 
 
