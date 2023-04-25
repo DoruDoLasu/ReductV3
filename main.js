@@ -1032,11 +1032,12 @@ function rendermessages(){
                   if ((themessages[i].content.split(":").length > 2) && !(thesets.lointernet)) {
                     var mscontent = document.createElement("h5");
                         mscontent.id = "content";
+			mscontent.className = "content";
                         msgmote = themessages[i].content.split(":");
                         msgmote.forEach(function (item, index){
                         if ((index % 2 !=0) && (item.length == 26 && item.indexOf("<") == -1)){
                             var mscontent1 = document.createElement("span");
-                            mscontent1.class = "emoji";
+                            mscontent1.className = "content";
                             var emote = document.createElement("img");
                             emote.id = "emoji";
                        	    emote.src = "https://autumn.revolt.chat/emojis/" + item;
@@ -1045,7 +1046,7 @@ function rendermessages(){
                       }
                       else if ((index % 2 !=0) && item == "cat_departure") {
                           var mscontent1 = document.createElement("span");
-                          mscontent1.class = "emoji";
+                          mscontent1.className = "content";
                           var emote = document.createElement("img");
                           emote.id = "emoji";
                           emote.src = "https://autumn.revolt.chat/emojis/01G7KXGW83G5EGFWX7ASMJ04Q7";
@@ -1054,7 +1055,7 @@ function rendermessages(){
                       }
                       else if ((index % 2 !=0) && item == "wires") {
                           var mscontent1 = document.createElement("span");
-                          mscontent1.class = "emoji";
+                          mscontent1.className = "content";
                           var emote = document.createElement("img");
                           emote.id = "emoji";
                           emote.src = "https://autumn.revolt.chat/emojis/01GJTC4RD6XAJXRAAM30KW25VD";
@@ -1063,7 +1064,7 @@ function rendermessages(){
                       }
                       else if (index % 2 !=0 && theoldcustemotes[item] !== undefined) {
                         var mscontent1 = document.createElement("span");
-                            mscontent1.class = "emoji";
+                            mscontent1.className = "content";
                         var emote = document.createElement("img");
                             emote.id = "emoji";
                             emote.src = "https://dl.insrt.uk/projects/revolt/emotes/" + theoldcustemotes[item];
@@ -1072,12 +1073,14 @@ function rendermessages(){
                       }
                       else if (index % 2 !=0) {
                         var mscontent2 = document.createElement("span");
+			mscontent2.className = "content";
                         mscontent2.innerText = ":" + item + ":";
                         mscontent.appendChild(mscontent2);
                       }
                       else {
                         var mscontent2 = document.createElement("span");
                         mscontent2.innerText = item;
+			mscontent2.className = "content";
                         mscontent.appendChild(mscontent2);
                       }
 
@@ -1088,6 +1091,7 @@ function rendermessages(){
                    else {
                   var mscontent = document.createElement("h5");
                   mscontent.id = "content";
+		  mscontent.className = "content";
                   mscontent.innerText = themessages[i].content;
                   message.appendChild(mscontent);
                    }
@@ -1096,6 +1100,7 @@ function rendermessages(){
                   else if (themessages[i].system !== undefined) {
                     var mscontent = document.createElement("h5");
                     mscontent.id = "content";
+		    mscontent.className = "content";
                     mscontent.innerText = themessages[i].system.type + "  " + themessages[i].system.id;
                     message.appendChild(mscontent);
                   }
