@@ -761,7 +761,7 @@ function rendermessages(){
 	beforemark = document.createElement("div");
 	beforemark.id = "beforemarknow";
 	beforemark.className = "beforemarking";
-	document.getElementById("messages").appendChild(beforemark);
+	document.getElementById("messages").prepend(beforemark);
         
               for (var i=0; i < theparsedthing.users.length; i++) {
                   if (theusers[theparsedthing.users[i]._id] === undefined){
