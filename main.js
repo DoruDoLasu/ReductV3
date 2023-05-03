@@ -1291,7 +1291,7 @@ function getmessages(nearb, messid){
       earlier.id = "early";
       earlier.onclick = "getmessagelegacyolder()"
 	    
-      if (document.getElementById("early") !== undefined) {
+      if (document.getElementById("early") !== null) {
       	document.getElementById("early").remove();
       }
       document.getElementById("messages").prepend(earlier)
