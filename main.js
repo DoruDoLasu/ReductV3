@@ -1272,7 +1272,7 @@ function getmessages(nearb, messid){
       document.getElementById("messages").style.backgroundRepeat = "";
       document.getElementById("messages").style.backgroundSize = "";
       document.getElementById("messages").style.backgroundPositionX = "";
-      document.getElementById("messages").innerHTML = '<h2 id="newm">===</h2><button onclick="getmessagelegacyolder()">Get older messages</a>';
+      document.getElementById("messages").innerHTML = '<h2 id="newm">===</h2><button onclick="getmessagelegacyolder()">Get older messages</a>' + document.getElementById("messages").innerHTML;
       if (socket.readyState == 3) {
         dowebsocketstuff();
       }
