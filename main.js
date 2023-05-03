@@ -757,7 +757,7 @@ function replytachment(){
 }
 
 function rendermessages(){
-	firsttime = document.getElementById("beforemarking").length == 0;
+	firsttime = document.getElementsByClassName("beforemarking").length == 0;
 	beforemark = document.createElement("div");
 	beforemark.id = "beforemarknow";
 	beforemark.className = "beforemarking";
