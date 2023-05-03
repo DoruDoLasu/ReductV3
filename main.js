@@ -757,6 +757,11 @@ function replytachment(){
 }
 
 function rendermessages(){
+	firsttime = document.getElementById("beforemarking").length == 0;
+	beforemark = document.createElement("div");
+	beforemark.id = "beforemarknow";
+	beforemark.className = "beforemarking";
+        
               for (var i=0; i < theparsedthing.users.length; i++) {
                   if (theusers[theparsedthing.users[i]._id] === undefined){
                     theusers[theparsedthing.users[i]._id] = [];
@@ -1233,7 +1238,12 @@ function rendermessages(){
 
                   }
 
+		  if (firsttime) {
                   document.getElementById("messages").appendChild(message);
+		  } else {
+		 	beforemark.appendChild(message)
+			beforemark.id = "';
+		  }
                   lastprocessedauthor = themessages[i].author;
                 }
 
