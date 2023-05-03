@@ -1242,7 +1242,7 @@ function rendermessages(){
 		  document.getElementById("messages").appendChild(beforemark);
                   document.getElementById("messages").appendChild(message);
 		  } else {
-		        document.getElementById("beforemarknow") = themarknow;
+		        themarknow = document.getElementById("beforemarknow");
 			themarknow.appendChild(beforemark);
 		 	themarknow.appendChild(message);
 			themarknow.id = "";
