@@ -1286,7 +1286,15 @@ function getmessages(nearb, messid){
       document.getElementById("messages").style.backgroundRepeat = "";
       document.getElementById("messages").style.backgroundSize = "";
       document.getElementById("messages").style.backgroundPositionX = "";
-      document.getElementById("messages").innerHTML = '<h2 id="newm">===</h2><button onclick="getmessagelegacyolder()">Get older messages</a>' + document.getElementById("messages").innerHTML;
+      earlier = document.createElement("button");
+      earlier.innerText = "Get older messages";
+      earlier.id = "early";
+      earlier.onclick = "getmessagelegacyolder()"
+	    
+      if (document.getElementById("early") !== undefined) {
+      	document.getElementById("early").remove();
+      }
+      document.getElementById("messages").prepend(earlier)
       if (socket.readyState == 3) {
         dowebsocketstuff();
       }
