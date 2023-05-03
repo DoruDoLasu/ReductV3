@@ -761,6 +761,7 @@ function rendermessages(){
 	beforemark = document.createElement("div");
 	beforemark.id = "beforemarknow";
 	beforemark.className = "beforemarking";
+	document.getElementById("messages").appendChild(beforemark);
         
               for (var i=0; i < theparsedthing.users.length; i++) {
                   if (theusers[theparsedthing.users[i]._id] === undefined){
@@ -1239,13 +1240,10 @@ function rendermessages(){
                   }
 
 		  if (firsttime) {
-		  document.getElementById("messages").appendChild(beforemark);
                   document.getElementById("messages").appendChild(message);
 		  } else {
 		        themarknow = document.getElementById("beforemarknow");
-			themarknow.appendChild(beforemark);
 		 	themarknow.appendChild(message);
-			themarknow.id = "";
 		  }
                   lastprocessedauthor = themessages[i].author;
                 }
@@ -1254,6 +1252,9 @@ function rendermessages(){
                 replytachment();
 
               }
+if (document.getElementById("beforemarknow") !== undefined){
+	document.getElementById("beforemarknow").id = '';
+}
 }
 
 function getmessages(nearb, messid){
