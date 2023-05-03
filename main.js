@@ -1239,10 +1239,13 @@ function rendermessages(){
                   }
 
 		  if (firsttime) {
+		  document.getElementById("messages").appendChild(beforemark);
                   document.getElementById("messages").appendChild(message);
 		  } else {
-		 	beforemark.appendChild(message)
-			beforemark.id = "";
+		        document.getElementById("beforemarknow") = themarknow;
+			themarknow.appendChild(beforemark);
+		 	themarknow.appendChild(message);
+			themarknow.id = "";
 		  }
                   lastprocessedauthor = themessages[i].author;
                 }
