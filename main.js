@@ -1242,7 +1242,7 @@ function rendermessages(){
                   document.getElementById("messages").appendChild(message);
 		  } else {
 		 	beforemark.appendChild(message)
-			beforemark.id = "';
+			beforemark.id = "";
 		  }
                   lastprocessedauthor = themessages[i].author;
                 }
