@@ -338,7 +338,7 @@ function login() {
     document.getElementById("messages").innerHTML = '';
     document.getElementById("messages").style.backgroundColor = '';
     document.getElementById("precontrols").innerHTML = '<select id="selecftt" onchange="chchannelyes()" style="width: 30vw;"></select><button onclick="changeservchannel()">Home</button>';
-    document.getElementById("controls").innerHTML = '<button onclick="attachprepare()">+</button><input id="a" style="width: 64%"/><button id="send" onclick="sendmessage()" style="width: 20%">==></button><button id="gett" onclick="getmessages()">Fresh</button>';
+    document.getElementById("controls").innerHTML = '<button onclick="attachprepare()">+</button><input id="a" style="width: 64%"/><button id="send" onclick="sendmessage()" style="width: 20%">==></button><button id="gett" onclick="getmessages(3)">Fresh</button>';
 
 
 
@@ -757,6 +757,7 @@ function replytachment(){
 }
 
 function rendermessages(direction){
+	if (direction == 3) document.getElementById("messages").innerHTML = '';
         earlier = document.createElement("button");
         earlier.innerText = "Get older messages";
         earlier.id = "early";
