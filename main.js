@@ -756,7 +756,7 @@ function replytachment(){
 
 }
 
-function rendermessages(){
+function rendermessages(direction){
         earlier = document.createElement("button");
         earlier.innerText = "Get older messages";
         earlier.id = "early";
@@ -771,8 +771,7 @@ function rendermessages(){
 	beforemark.className = "beforemarking";
 	if (firsttime) {
 	curdiv = document.createElement("div");
-	curdiv.id = "beforemarknow";
-	curdiv.className = "beforemarking";
+	curdiv.id = "curdiv";
 	document.getElementById("messages").prepend(curdiv);	
 	}
 	document.getElementById("messages").prepend(beforemark);
@@ -1254,8 +1253,8 @@ function rendermessages(){
 
                   }
 
-		  if (firsttime) {
-			curdiv.appendChild(message);
+		  if ((firsttime) | (direction == 2)) {
+			document.getElementById("curdiv").appendChild(message);
 		  } else {
 		        themarknow = document.getElementById("beforemarknow");
 		 	themarknow.appendChild(message);
