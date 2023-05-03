@@ -757,11 +757,20 @@ function replytachment(){
 }
 
 function rendermessages(){
+        earlier = document.createElement("button");
+        earlier.innerText = "Get older messages";
+        earlier.id = "early";
+        earlier.onclick = "getmessagelegacyolder()"
+	    
+      if (document.getElementById("early") !== null) {
+    	document.getElementById("early").remove();
+      }
 	firsttime = document.getElementsByClassName("beforemarking").length == 0;
 	beforemark = document.createElement("div");
 	beforemark.id = "beforemarknow";
 	beforemark.className = "beforemarking";
 	document.getElementById("messages").prepend(beforemark);
+	document.getElementById("messages").prepend(earlier);
         
               for (var i=0; i < theparsedthing.users.length; i++) {
                   if (theusers[theparsedthing.users[i]._id] === undefined){
@@ -1286,15 +1295,6 @@ function getmessages(nearb, messid){
       document.getElementById("messages").style.backgroundRepeat = "";
       document.getElementById("messages").style.backgroundSize = "";
       document.getElementById("messages").style.backgroundPositionX = "";
-      earlier = document.createElement("button");
-      earlier.innerText = "Get older messages";
-      earlier.id = "early";
-      earlier.onclick = "getmessagelegacyolder()"
-	    
-      if (document.getElementById("early") !== null) {
-      	document.getElementById("early").remove();
-      }
-      document.getElementById("messages").prepend(earlier)
       if (socket.readyState == 3) {
         dowebsocketstuff();
       }
