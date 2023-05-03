@@ -1259,6 +1259,7 @@ function rendermessages(direction){
 		  } else {
 		        themarknow = document.getElementById("beforemarknow");
 		 	themarknow.appendChild(message);
+			highlight(firstmessage);
 		  }
                   lastprocessedauthor = themessages[i].author;
                 }
