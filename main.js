@@ -287,7 +287,7 @@ function dowebsocketstuff() {
             thenewstuff = JSON.parse(datta);
             themessages = [];
             themessages[0] = thenewstuff;
-            rendermessages();
+            rendermessages(2);
             if (thesets.autoscroll == true) {
                 if (document.getElementById("messages").scrollTop >= document.getElementById("messages").scrollHeight*0.75){
                 document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
