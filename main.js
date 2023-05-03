@@ -760,7 +760,7 @@ function rendermessages(){
         earlier = document.createElement("button");
         earlier.innerText = "Get older messages";
         earlier.id = "early";
-        earlier.onclick = "getmessagelegacyolder()"
+        earlier.onclick = getmessagelegacyolder;
 	    
       if (document.getElementById("early") !== null) {
     	document.getElementById("early").remove();
@@ -769,6 +769,12 @@ function rendermessages(){
 	beforemark = document.createElement("div");
 	beforemark.id = "beforemarknow";
 	beforemark.className = "beforemarking";
+	if (firsttime) {
+	curdiv = document.createElement("div");
+	curdiv.id = "beforemarknow";
+	curdiv.className = "beforemarking";
+	document.getElementById("messages").prepend(curdiv);	
+	}
 	document.getElementById("messages").prepend(beforemark);
 	document.getElementById("messages").prepend(earlier);
         
@@ -1249,7 +1255,7 @@ function rendermessages(){
                   }
 
 		  if (firsttime) {
-                  document.getElementById("messages").appendChild(message);
+			curdiv.appendChild(message);
 		  } else {
 		        themarknow = document.getElementById("beforemarknow");
 		 	themarknow.appendChild(message);
