@@ -287,7 +287,7 @@ function dowebsocketstuff() {
             thenewstuff = JSON.parse(datta);
             themessages = [];
             themessages[0] = thenewstuff;
-            rendermessages(2);
+            rendermessages();
             if (thesets.autoscroll == true) {
                 if (document.getElementById("messages").scrollTop >= document.getElementById("messages").scrollHeight*0.75){
                 document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
@@ -338,7 +338,7 @@ function login() {
     document.getElementById("messages").innerHTML = '';
     document.getElementById("messages").style.backgroundColor = '';
     document.getElementById("precontrols").innerHTML = '<select id="selecftt" onchange="chchannelyes()" style="width: 30vw;"></select><button onclick="changeservchannel()">Home</button>';
-    document.getElementById("controls").innerHTML = '<button onclick="attachprepare()">+</button><input id="a" style="width: 64%"/><button id="send" onclick="sendmessage()" style="width: 20%">==></button><button id="gett" onclick="getmessages(3)">Fresh</button>';
+    document.getElementById("controls").innerHTML = '<button onclick="attachprepare()">+</button><input id="a" style="width: 64%"/><button id="send" onclick="sendmessage()" style="width: 20%">==></button><button id="gett" onclick="getmessages()">Fresh</button>';
 
 
 
@@ -756,28 +756,7 @@ function replytachment(){
 
 }
 
-function rendermessages(direction){
-	if (direction == 3) document.getElementById("messages").innerHTML = '';
-        earlier = document.createElement("button");
-        earlier.innerText = "Get older messages";
-        earlier.id = "early";
-        earlier.onclick = getmessagelegacyolder;
-	    
-      if (document.getElementById("early") !== null) {
-    	document.getElementById("early").remove();
-      }
-	firsttime = document.getElementsByClassName("beforemarking").length == 0;
-	beforemark = document.createElement("div");
-	beforemark.id = "beforemarknow";
-	beforemark.className = "beforemarking";
-	if (firsttime) {
-	curdiv = document.createElement("div");
-	curdiv.id = "curdiv";
-	document.getElementById("messages").prepend(curdiv);	
-	}
-	document.getElementById("messages").prepend(beforemark);
-	document.getElementById("messages").prepend(earlier);
-        
+function rendermessages(){
               for (var i=0; i < theparsedthing.users.length; i++) {
                   if (theusers[theparsedthing.users[i]._id] === undefined){
                     theusers[theparsedthing.users[i]._id] = [];
@@ -1254,13 +1233,7 @@ function rendermessages(direction){
 
                   }
 
-		  if ((firsttime) | (direction == 2)) {
-			document.getElementById("curdiv").appendChild(message);
-		  } else {
-		        themarknow = document.getElementById("beforemarknow");
-		 	themarknow.appendChild(message);
-			highlight(firstmessage);
-		  }
+                  document.getElementById("messages").appendChild(message);
                   lastprocessedauthor = themessages[i].author;
                 }
 
@@ -1268,9 +1241,6 @@ function rendermessages(direction){
                 replytachment();
 
               }
-if (document.getElementById("beforemarknow") !== undefined){
-	document.getElementById("beforemarknow").id = '';
-}
 }
 
 function getmessages(nearb, messid){
@@ -1302,6 +1272,7 @@ function getmessages(nearb, messid){
       document.getElementById("messages").style.backgroundRepeat = "";
       document.getElementById("messages").style.backgroundSize = "";
       document.getElementById("messages").style.backgroundPositionX = "";
+      document.getElementById("messages").innerHTML = '<h2 id="newm">===</h2><button onclick="getmessagelegacyolder()">Get older messages</a>';
       if (socket.readyState == 3) {
         dowebsocketstuff();
       }
