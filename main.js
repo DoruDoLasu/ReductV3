@@ -568,6 +568,25 @@ function ulidtodate(ulid){
     return finaldate;
 }
 
+function editmask(){
+  istyping = false;
+  document.getElementById("typing").innerHTML = '<input id="maskname" placeholder="mask name"><input id="pfpurl" placeholder="pfp url"><button onclick="editmasknext()">edit</button><button onclick="closeattach()">X</button><br>';
+}
+
+function editmasknext(){
+    name = document.getElementById("maskname").value;
+    pfp = document.getElementById("pfpurl").value;
+    if (name.length <= 0 && pfp.length <= 0) {themask = {}} else {
+    if (name.length > 0) {themask.name = name;}
+    if (pfp.length > 0) { themask.avatar = pfp; }
+    }
+    document.getElementById("typing").innerHTML = '';
+    istyping = true;
+    replytachment();
+}
+
+
+
 function sendmessage(){
   wiadomosc = {content: document.getElementById("a").value,
                replies: thereplying};
