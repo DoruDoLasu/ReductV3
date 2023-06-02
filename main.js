@@ -742,14 +742,18 @@ function repply(replyid){
 function resetreplytachment(){
   thereplying = [];
   theattachments = [];
+  themask = {};
   replytachment();
 }
 
 function replytachment(){
-
-
-  document.getElementById("replyingto").innerHTML = '<span>Replies to: ' + thereplying.length + '</span><span>, attachments: ' + theattachments.length + '    </span><span onclick="resetreplytachment()">[reset all]</span>';
-
+  document.getElementById("replyingto").innerHTML ='';
+  mestatus = document.createElement("span");
+  maskstatus = Object.keys(themask).length > 0 ? "set" : "unset ";
+  mestatus.innerText = "Replies to: " + thereplying.length + ", attachments: " + theattachments.length + ", mask:" + maskstatus
+  document.getElementById("replyingto").appendChild(mestatus);
+  document.getElementById("replyingto").innerHTML += '<span onclick="editmask()">[edit mask] </span>';
+  document.getElementById("replyingto").innerHTML += '<span onclick="resetreplytachment()">[reset all]</span>';
 }
 
 function rendermessages(){
