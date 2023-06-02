@@ -38,6 +38,7 @@ var timer = 0;
 var socket = 0;
 var thereplying = [];
 var theattachments = [];
+var themask = {};
 var istyping = true;
 var isserver = false;
 
@@ -568,18 +569,13 @@ function ulidtodate(ulid){
 }
 
 function sendmessage(){
-  // Checking for attachments
-  if (theattachments.length > 0){
-    wiadomosc = JSON.stringify({
-                          content: document.getElementById("a").value,
-                          replies: thereplying,
-                          attachments: theattachments});
-  }
-  else {
-    wiadomosc = JSON.stringify({
-                          content: document.getElementById("a").value,
-                          replies: thereplying});
-  }
+  wiadomosc = {content: document.getElementById("a").value,
+               replies: thereplying};
+
+  if (theattachments.length > 0){ wiadomosc.attachments = theattachments; }
+  if (Object.keys(themask).length > 0){ wiadomosc.masquerade = themask; }
+  wiadomosc = JSON.stringify(wiadomosc);
+
 
   dorequeststuff("POST", "/channels/"+thechannel+"/messages", wiadomosc, function(result){
   if(result == 200){
