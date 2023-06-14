@@ -592,6 +592,7 @@ function sendmessage(){
                replies: thereplying};
 
   if (theattachments.length > 0){ wiadomosc.attachments = theattachments; }
+  if (theembeds.length > 0){ wiadomosc.embeds = theembeds; }
   if (Object.keys(themask).length > 0){ wiadomosc.masquerade = themask; }
   wiadomosc = JSON.stringify(wiadomosc);
 
