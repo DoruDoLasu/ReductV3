@@ -38,6 +38,7 @@ var timer = 0;
 var socket = 0;
 var thereplying = [];
 var theattachments = [];
+var theembeds = [];
 var themask = {};
 var istyping = true;
 var isserver = false;
@@ -762,6 +763,7 @@ function repply(replyid){
 function resetreplytachment(){
   thereplying = [];
   theattachments = [];
+  theembeds = [];
   themask = {};
   replytachment();
 }
