@@ -1263,6 +1263,7 @@ function rendermessages(){
                 replytachment();
 
               }
+              thestage = "atmessages";
 }
 
 function getmessages(nearb, messid){
@@ -1342,22 +1343,34 @@ function cancelKeepAlive() {
 });*/
 
 document.addEventListener('keyup', function(event){
-	if(event.key === "Escape"){
-		document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
-        document.getElementById("messages").focus();
-	}
-	if(thestage != "login"){
-    if(event.key === "Enter"){
-      if (document.activeElement == document.getElementById("edithere")){
-        document.getElementById("doedit").click();
-      }
-      else {
-      document.getElementById("send").click();
-      }
-	}
-	if(event.key === "i"){
-      document.getElementById("a").focus()
-	}
-    }
+  switch (thestage) {
+    case 'login':
+      break;
+    case 'loggedin':
+      break;
+    case 'schange':
+      break;
+    case 'scgchange':
+      break;
+    case 'atmessages':
+      switch (event.key) {
+        case 'i':
+          document.getElementById("a").focus();
+          break;
+        case 'Escape':
+          document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
+          document.getElementById("messages").focus();
+          break;
+        case 'Enter':
+          if (document.activeElement == document.getElementById("edithere")){
+            document.getElementById("doedit").click();
+          } else {
+            document.getElementById("send").click();
+          }
+        }
+      break;
+    default:
+      break;
+  }
 });
 
