@@ -340,7 +340,7 @@ function login() {
     document.getElementById("messages").innerHTML = '';
     document.getElementById("messages").style.backgroundColor = '';
     document.getElementById("precontrols").innerHTML = '<select id="selecftt" onchange="chchannelyes()" style="width: 30vw;"></select><button onclick="changeservchannel()">Home</button>';
-    document.getElementById("controls").innerHTML = '<button onclick="attachprepare()">+</button><input id="a" style="width: 64%"/><button id="send" onclick="sendmessage()" style="width: 20%">==></button><button id="gett" onclick="getmessages()">Fresh</button>';
+    document.getElementById("controls").innerHTML = '<button onclick="attachprepare()" style="width: 6vw">+</button><input id="a" style="width: 64vw"/><button id="send" onclick="sendmessage()" style="width: 16vw">==></button><button id="gett" style="width: 5vw" onclick="getmessages()">Fresh</button>';
 
 
 
