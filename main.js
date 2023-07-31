@@ -234,7 +234,7 @@ function dorequeststuff(lareq, laurl, lathing, after){
   }
   var themsgsa = new XMLHttpRequest();
   themsgsa.open(lareq, laurl, true);
-  if (thetoken !== undefined){
+  if ((thetoken !== undefined) && (laurl.search("https://api.revolt.chat/") == 0)){
   themsgsa.setRequestHeader("x-session-token", thetoken);
   }
   themsgsa.setRequestHeader("Accept", "*/*");
