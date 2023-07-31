@@ -711,7 +711,7 @@ function editmessage(messid){
 
 function attachprepare(){
   istyping = false;
-  document.getElementById("typing").innerHTML = '<input type="file" id="attachhere" label="edited"/><button onclick="uploadautumn()">Upload to Autumn</button><button onclick="closeattach()">X</button>';
+  document.getElementById("typing").innerHTML = '<input type="file" id="attachhere" label="edited"/><button onclick="uploadautumn()">Upload</button><button onclick="uploadautumn(1)">Upload spoilered</button><button onclick="closeattach()">X</button>';
 }
 
 function closeattach(){
@@ -719,11 +719,15 @@ function closeattach(){
     istyping = true;
 }
 
-function uploadautumn(){
+function uploadautumn(spoilered){
   if (theattachments.length < 5){
     if (document.getElementById("attachhere").files[0] !== undefined){
     theattachment = new FormData();
-    theattachment.append('file', document.getElementById("attachhere").files[0]);
+    if (spoilered == 1){
+    	theattachment.append('file', document.getElementById("attachhere").files[0],"SPOILER_" + document.getElementById("attachhere").files[0].name);
+    } else {
+    	theattachment.append('file', document.getElementById("attachhere").files[0]);
+    }
 
     var sendmsgsa = new XMLHttpRequest();
       sendmsgsa.open("POST", "https://autumn.revolt.chat/attachments", true);
