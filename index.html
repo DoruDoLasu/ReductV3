@@ -7,11 +7,23 @@
   <title>ReductV3</title>
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <style>
-     #firstdiv {position: fixed; top: 0; left: 0; background-color: #24242475}
+    @media only screen and (max-width: 854px) {
+    h4#logo2 {
+        display:none;
+    }
+    }
+    @media only screen and (min-width: 854px) {
+    h4#logo2 {
+        margin: 0px;background-color:#848484;display:inline-block;
+    }
+    }
+    .logolike {
+        margin: 0px;background-color:#848484;display:inline-block;overflow:auto
+     }
+     #firstdiv {background-color: #24242475; }
      #restdiv {position: fixed; bottom: 0; left: 0; width: 100%; background-color:#242424af}
     .messagontrols {float: right}
     .message {background-color: #3737374f}
-    span {font-size: 12px; font-family: sans}
     #tokenwarning {color: #fafafa; background-color: #522; margin: 4px}
     #logo {margin: 0px; background-color:#FD6671;display:inline-block; color: #000000;font-size: 24px;}
     h1 {margin: 0px; color: #fff}
@@ -19,7 +31,7 @@
     h2 {margin: 0px;color: #fff}
     h4#extras {color: #efefef}
     h3#channelname {margin: 0px; margin-left: 20px}
-    h4#logo2 {margin: 0px;background-color:#848484;display:inline-block;}
+
     span.author {margin-left: 5px; color:yellowgreen; padding-right: 2px}
     span.system {margin-left: 5px; color:purple; padding-right: 2px}
     span.maskedauthor {margin-left: 5px; color:#ff6d6c; padding-right: 2px}
@@ -35,7 +47,7 @@
     h5#filename {margin:0px;color:#989898}
     a {color:#FD6671}
     #embedd {color: white;border-left: 10px solid #757575;margin: 0px;}
-    div#messages {overflow-y: scroll;background-color:#242424;width: 100%;height: 75vh;padding-bottom:5em;padding-top:2em}
+    div#messages {overflow-y: scroll;background-color:#242424;width: 100%;height: 75vh;padding-bottom:5em;}
     div.nmsgtop {margin-top:10px;}
 
     div#typing {color: #989898;font-size:15px;height:24px}
@@ -52,28 +64,33 @@
 </head>
 
 <body>
+    <noscript>
+    <h1>
+    This page will literally not do anything without javascript
+    </h1>
+    </noscript>
     <div id="firstdiv">
         <h1 id="logo">ReductV3</h1>
         <span id="wsconnection"></span>
         <span id="precontrols"></span>
-        <h4 id="logo2">light revolt.chat client held together by duct tape and bad code</h4>
     </div>
 
     <div id="messages">
       <div id="loggingin" style="text-align: center;display: grid;">
       <input id="token"/>
-      <h4 id="logo2">ENTER TOKEN HERE and press ok</h4>
+      <h4 class="logolike">ENTER TOKEN HERE and press ok</h4>
       <button onclick="login()">ok</button>
       <input type="checkbox" onclick="wipelocal()" id="keeptoken" name="keep">
       <label for="keep">Keep entered token saved in localStorage of your browser (unchecking clears it)</label>
       <h4 id="tokenwarning">REMEMBER TO NEVER POST YOUR TOKEN OR PASSWORD ANYWHERE!!!!!</h4>
       <h4 id="logo2">To obtain your token, paste and press enter on this in the web console (Ctrl-Shift-I) if you\'re using Revite (default Revolt chat client):
-      <p>window.state.auth.sessions.get(controllers.client.getReadyClient().user._id).session.token</p>
+      <p style="background-color: #c6a777;display: inline;">window.state.auth.sessions.get(controllers.client.getReadyClient().user._id).session.token</p>
       or
-      <a style="color: #BB000E" onclick="loginpass()">click here</a>
-      to login with email and password</h4>
-      <h4 id="logo2"><br/>
-      <a style="color: #BB000E" href="https://github.com/DoruDoLasu/ReductV3">ReductV3 GitHub</a></h4></div>
+      <h4 class="logolike">
+      <button style="color: #BB000E" onclick="loginpass()">click here</button>
+      to login with email and password</h4></h4>
+      <h4 class="logolike"><br/>
+      <a style="color: #522" href="https://github.com/DoruDoLasu/ReductV3">ReductV3 GitHub page</a></h4></div>
 
 
     </div>

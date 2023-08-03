@@ -204,9 +204,7 @@ dorequeststuff("POST", "/auth/session/login", thecreditials, function a(status, 
 }
 
 function loginpass(){
-document.getElementById("messages").innerHTML = '<h3 id="tokeno"></h3><span><span>email: </span><input id="emu"><br><span>password: </span><input id="pass" type="password"><br><span>session name: </span><input id="nam" value="ReductV3"><br><button onclick="dologin()">Login</button><input type="checkbox" onclick="wipelocal()" id="keeptoken" name="keep"><label for="keep" style="color:#000000">Keep entered token saved in localStorage of your browser</label></span><input type="checkbox" id="scrolloff" name="scrolloff"><label for="scrolloff" style="color:#000000">Always autoscroll</label>';
-
-document.getElementById("messages").style.backgroundColor = "#b9b9b9";
+document.getElementById("messages").innerHTML = '<span style="color: white"><span>email: </span><input id="emu"><br><span>password: </span><input id="pass" type="password"><br><span>session name: </span><input id="nam" value="ReductV3"><br><button onclick="dologin()">Login</button><input type="checkbox" onclick="wipelocal()" id="keeptoken" name="keep"><label for="keep">Keep entered token saved in localStorage of your browser</label></span>';
 }
 
 
