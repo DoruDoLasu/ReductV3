@@ -1045,8 +1045,12 @@ function rendermessages(){
                     replies.style = "color: #ffffff";
                     replies.innerHTML = " ";
                     for (rep=0;rep<themessages[i].replies.length;rep++){
-                    replies.innerHTML += '<a href="#' + themessages[i].replies[rep] + '" onclick="highlight(\''+themessages[i].replies[rep]+'\')">['+(rep+1)+']</a> ';
-                    message.appendChild(replies);
+			    if (document.getElementById(themessages[i].replies[rep]) !== null){
+                    		replies.innerHTML += '<a href="#' + themessages[i].replies[rep] + '" onclick="highlight(\''+themessages[i].replies[rep]+'\')">['+(rep+1)+']</a> ';
+                    		message.appendChild(replies);
+			    } else {
+				replies.innerHTML += '[' + rep + ']';
+			    }
                     }
                   }
 		  var time = document.createElement("span");
