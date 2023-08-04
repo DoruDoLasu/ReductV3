@@ -25,6 +25,7 @@ SOFTWARE. */
 
 var theusers = {};
 var theblocked = [];
+var theblockedtreatment = 1;
 var friendidtoname = {};
 
 var thetoken = undefined;
@@ -867,7 +868,11 @@ function rendermessages(){
 		  message.className = "message";
 
 		  // only bother with the message if its author isn't blocked
-		  if (!theblocked.includes(themessages[i].author)) {
+		  if (theblocked.includes(themessages[i].author)) {
+			if (theblockedtreatment == 1) {
+				message.innerHTML = "<span>[]<span>";
+			}
+		  } else {
 
                   // THE MESSAGE AUTHOR
 
