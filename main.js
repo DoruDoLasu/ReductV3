@@ -860,11 +860,14 @@ function rendermessages(){
 
                 for(var i=themessages.length-1;i>=0;i--){
                   // if (themessages[i].content !== undefined) {
-		  if (!theblocked.includes(themessages[i].author)) {
+		  
 
                   var message = document.createElement("div");
                   message.id = themessages[i]._id;
 		  message.className = "message";
+
+		  // only bother with the message if its author isn't blocked
+		  if (!theblocked.includes(themessages[i].author)) {
 
                   // THE MESSAGE AUTHOR
 
@@ -1045,11 +1048,7 @@ function rendermessages(){
                     replies.style = "color: #ffffff";
                     replies.innerHTML = " ";
                     for (rep=0;rep<themessages[i].replies.length;rep++){
-			    if (document.getElementById(themessages[i].replies[rep]) !== null){
                     		replies.innerHTML += '<a href="#' + themessages[i].replies[rep] + '" onclick="highlight(\''+themessages[i].replies[rep]+'\')">['+(rep+1)+']</a> ';
-			    } else {
-				replies.innerHTML += '[' + rep + ']';
-			    }
                     }
 		    message.appendChild(replies);
                   }
@@ -1276,10 +1275,10 @@ function rendermessages(){
 
                     });
 
-                  }
+                  } }
                   document.getElementById("messages").appendChild(message);
                   lastprocessedauthor = themessages[i].author;
-                } }
+                }
 
                 lastmessage = themessages[0]._id;
                 replytachment();
