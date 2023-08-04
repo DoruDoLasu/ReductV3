@@ -854,6 +854,7 @@ function rendermessages(){
 
                 for(var i=themessages.length-1;i>=0;i--){
                   // if (themessages[i].content !== undefined) {
+		  if (!theblocked.includes(themessages[i].author)) {
 
                   var message = document.createElement("div");
                   message.id = themessages[i]._id;
@@ -1266,10 +1267,9 @@ function rendermessages(){
                     });
 
                   }
-
                   document.getElementById("messages").appendChild(message);
                   lastprocessedauthor = themessages[i].author;
-                }
+                } }
 
                 lastmessage = themessages[0]._id;
                 replytachment();
