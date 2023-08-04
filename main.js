@@ -312,11 +312,13 @@ function dowebsocketstuff() {
   if (JSON.parse(datta)["type"] == "ChannelStartTyping" && JSON.parse(datta)["id"] == thechannel) {
     if (istyping == true){
       typtyp = JSON.parse(datta);
-      if (theusers[typtyp.user] === undefined) {
-        document.getElementById('typing').innerText = typtyp.user + " is typing";
-      } else {
-          document.getElementById('typing').innerText = theusers[typtyp.user][0] + " is typing";
-      }
+	if (!theblocked.includes(typtyp.user)){
+      		if (theusers[typtyp.user] === undefined) {
+        		document.getElementById('typing').innerText = typtyp.user + " is typing";
+      		} else {
+          		document.getElementById('typing').innerText = theusers[typtyp.user][0] + " is typing";
+      		}
+	}
     }
   }
   if (JSON.parse(datta)["type"] == "ChannelStopTyping" && JSON.parse(datta)["id"] == thechannel) {
