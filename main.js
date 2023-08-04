@@ -870,7 +870,7 @@ function rendermessages(){
 		  // only bother with the message if its author isn't blocked
 		  if (theblocked.includes(themessages[i].author)) {
 			if (theblockedtreatment == 1) {
-				message.innerHTML = "<span>[]<span>";
+				message.innerHTML = "<span style="color: white"> 𝕏<span>";
 			}
 		  } else {
 
