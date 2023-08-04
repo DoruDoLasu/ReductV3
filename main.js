@@ -280,7 +280,7 @@ function dowebsocketstuff() {
             channellist = thefirstthing.channels;
 
             thefirstthing.users.forEach(function (item){
-              friendidtoname[item._id] = item.username;
+              friendidtoname[item._id] = item.username + "#" + item.discriminator;
             });
 
             changeservchannel();
@@ -786,7 +786,7 @@ function rendermessages(){
               for (var i=0; i < theparsedthing.users.length; i++) {
                   if (theusers[theparsedthing.users[i]._id] === undefined){
                     theusers[theparsedthing.users[i]._id] = [];
-                    theusers[theparsedthing.users[i]._id][0] = theparsedthing.users[i].username;
+                    theusers[theparsedthing.users[i]._id][0] = theparsedthing.users[i].username + "#" + theparsedthing.users[i].discriminator;
 
 
                     if (theparsedthing.users[i].avatar !== undefined){
