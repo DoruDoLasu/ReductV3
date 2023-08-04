@@ -24,6 +24,7 @@ SOFTWARE. */
 
 
 var theusers = {};
+var theblocked = [];
 var friendidtoname = {};
 
 var thetoken = undefined;
@@ -281,6 +282,9 @@ function dowebsocketstuff() {
 
             thefirstthing.users.forEach(function (item){
               friendidtoname[item._id] = item.username + "#" + item.discriminator;
+	      if (item.relationship == "Blocked"){
+		theblocked.push(item._id);
+	      }
             });
 
             changeservchannel();
