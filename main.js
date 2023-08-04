@@ -544,15 +544,19 @@ function customidpick(){
   getmessages();
 }
 
-function highlight(id){
+function highlight(id,giveup){
   if (document.getElementById(id) !== null){
   colour = document.getElementById(id).style.color;
   document.getElementById(id).style.backgroundColor = "#000000";
   setTimeout(function() {document.getElementById(id).style.backgroundColor = null;}, 2000);
   } else {
-    console.log("failed to highlight, not on here");
-    getmessages(1,id);
-    setTimeout(function() {highlight(id);}, 1000);
+	  if (giveup) {
+		console.log("failed to highlight, gave up");
+	  } else {
+    		console.log("failed to highlight, not on here");
+    		getmessages(1,id);
+    		setTimeout(function() {highlight(id, true);}, 1000);
+	  }
   }
 }
 
