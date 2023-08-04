@@ -307,7 +307,7 @@ function dowebsocketstuff() {
     if (istyping == true){
       typtyp = JSON.parse(datta);
       if (theusers[typtyp.user] === undefined) {
-        document.getElementById('typing').innerText = typtyp.user + " is typing";
+        document.getElementById('typing').innerText = typtyp.user + "is typing";
       } else {
           document.getElementById('typing').innerText = theusers[typtyp.user][0] + " is typing";
       }
