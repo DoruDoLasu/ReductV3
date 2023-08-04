@@ -42,6 +42,7 @@ var theembeds = [];
 var themask = {};
 var istyping = true;
 var isserver = false;
+var wslog = false;
 
 var theparsedthing;
 
@@ -271,6 +272,7 @@ function dowebsocketstuff() {
  });
  socket.addEventListener('message', function (event) {
    datta = event.data;
+   if (wslog) {console.log(datta)};
    if (JSON.parse(datta)["type"] == "Ready") {
             thestage = "loggedin";
 			thefirstthing = JSON.parse(datta);
@@ -307,7 +309,7 @@ function dowebsocketstuff() {
     if (istyping == true){
       typtyp = JSON.parse(datta);
       if (theusers[typtyp.user] === undefined) {
-        document.getElementById('typing').innerText = typtyp.user + "is typing";
+        document.getElementById('typing').innerText = typtyp.user + " is typing";
       } else {
           document.getElementById('typing').innerText = theusers[typtyp.user][0] + " is typing";
       }
@@ -1043,7 +1045,11 @@ function rendermessages(){
                   if (thesets.doitime === true){
                   time.innerText = timetobeats(datae);
                   } else {
-                  time.innerText = " (" + datae.toLocaleTimeString() + ")"
+                      if (new Date() - datae >  86400000) {
+                          time.innerText = " (" + datae.toLocaleString() + ")";
+                      } else {
+                  	time.innerText = " (" + datae.toLocaleTimeString() + ")";
+                      }
                   }
                   message.appendChild(time);
                   message.innerHTML += '<div class="messagontrols"><span class="deleto" onclick="deletemessage(\'' + themessages[i]._id + '\')">[delete]</span><span class="replyto" onclick="repply(\'' + themessages[i]._id + '\')">[reply]</span>' + '<span class="replyto" onclick="reacttopre(\'' + themessages[i]._id + '\')">[react]</span>' + '<span class="replyto" onclick="editprepare(\'' + themessages[i]._id + '\')">[edit] </span></div>';
