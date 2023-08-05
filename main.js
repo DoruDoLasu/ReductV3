@@ -45,6 +45,7 @@ var themask = {};
 var istyping = true;
 var isserver = false;
 var wslog = false;
+var wslogplus = false;
 
 var theparsedthing;
 
@@ -212,7 +213,7 @@ document.getElementById("messages").innerHTML = '<span style="color: white"><spa
 
 
 
-
+console.log("ReductV3 starts!")
 thestage = "login";
 
 if (localStorage.tokeno !== undefined) {
@@ -263,6 +264,7 @@ function dowebsocketstuff() {
  socket = new WebSocket('wss://ws.revolt.chat');
 
  socket.addEventListener('open', function (event) {
+   console.log("WebSocket opened");
    socket.send('{"type":"Authenticate","token":"'+thetoken+'"}');
    document.getElementById("wsconnection").innerText = "WS connected";
    document.getElementById("wsconnection").style.color = "#67CC89";
@@ -274,26 +276,34 @@ function dowebsocketstuff() {
  });
  socket.addEventListener('message', function (event) {
    datta = event.data;
-   if (wslog) {console.log(datta)};
-   if (JSON.parse(datta)["type"] == "Ready") {
+   if (wslogplus) {console.log(datta)};
+   datta = JSON.parse(datta);
+   dattatype = datta["type"];
+
+
+   switch (dattatype) {
+     case "Authenticated":
+            console.log("Got Authenticated");
+            break;
+     case "Ready":
+            console.log("Got Ready")
             thestage = "loggedin";
-			thefirstthing = JSON.parse(datta);
+			thefirstthing = datta;
             serverlist = thefirstthing.servers;
             channellist = thefirstthing.channels;
 
             thefirstthing.users.forEach(function (item){
               friendidtoname[item._id] = item.username + "#" + item.discriminator;
-	      if (item.relationship == "Blocked"){
-		theblocked.push(item._id);
-	      }
+              if (item.relationship == "Blocked"){
+                theblocked.push(item._id);
+              }
             });
-
             changeservchannel();
-                }
-   if (JSON.parse(datta)["type"] == "Message" && JSON.parse(datta)["channel"] == thechannel) {
-            thenewstuff = JSON.parse(datta);
+            break;
+     case "Message":
+        if (datta["channel"] == thechannel){
             themessages = [];
-            themessages[0] = thenewstuff;
+            themessages[0] = datta;
             rendermessages();
             if (thesets.autoscroll == true) {
                 if (document.getElementById("messages").scrollTop >= document.getElementById("messages").scrollHeight*0.75){
@@ -305,35 +315,64 @@ function dowebsocketstuff() {
                   setTimeout(function(){document.getElementById("messages").style.borderBottomColor = "";}, 500)
                 }
               }
-  }
-  if ((JSON.parse(datta)["type"] == "MessageDelete") && (JSON.parse(datta)["channel"] == thechannel)){
-    document.getElementById(JSON.parse(datta)["id"]).remove();
-  }
-
-  if (JSON.parse(datta)["type"] == "ChannelStartTyping" && JSON.parse(datta)["id"] == thechannel) {
-    if (istyping == true){
-      typtyp = JSON.parse(datta);
-	if (!theblocked.includes(typtyp.user)){
+        }
+        break;
+     case "MessageDelete":
+       if (datta["channel"] == thechannel){
+          document.getElementById(datta["id"]).remove();
+       }
+       break;
+     case "ChannelStartTyping":
+       if (datta["id"] == thechannel){
+       if (istyping == true){
+        typtyp = datta;
+        if (!theblocked.includes(typtyp.user)){
       		if (theusers[typtyp.user] === undefined) {
         		document.getElementById('typing').innerText = typtyp.user + " is typing";
       		} else {
           		document.getElementById('typing').innerText = theusers[typtyp.user][0] + " is typing";
       		}
-	}
-    }
-  }
-  if (JSON.parse(datta)["type"] == "ChannelStopTyping" && JSON.parse(datta)["id"] == thechannel) {
-      if (istyping == true){
+          }
+        }
+       }
+      break;
+     case "ChannelStopTyping":
+       if (datta["id"] == thechannel){
+       if (istyping == true){
         document.getElementById('typing').innerText = '';
-      }
-  }
+       }
+       }
+       break;
+     case "Pong":
+       console.log("Pong");
+       break;
+     case "UserUpdate":
+       // We don't do anything with this for now
+       break
+     case "UserRelationship":
+       if (datta.status == "Blocked") {
+         theblocked.push(datta.user._id);
+         console.log(datta.user.username + " blocked - switch channel to see the effects")
+         break;
+       } else if (datta.status == "None" && theblocked.includes(datta.user._id)) {
+         theblocked.pop(datta.user._id);
+         console.log(datta.user.username + " unblocked - switch channel to see the effects")
+         break;
+       }
+     default:
+        console.log("Unhandled event:");
+        console.log(datta);
+        break;
+   }
 });
+ //
 }
 
 function wipelocal(){
   if (document.getElementById("keeptoken").checked == false ) {
     localStorage.clear();
   }
+  //
 }
 
 function login() {
@@ -868,10 +907,8 @@ function rendermessages(){
 		  message.className = "message";
 
 		  // only bother with the message if its author isn't blocked
-		  if (theblocked.includes(themessages[i].author)) {
-			if (theblockedtreatment == 1) {
+		  if ((theblocked.includes(themessages[i].author)) && (theblockedtreatment == 1)) {
 				message.innerHTML = '<span style="color: white"> 𝕏<span>';
-			}
 		  } else {
 
                   // THE MESSAGE AUTHOR
@@ -1168,6 +1205,9 @@ function rendermessages(){
 
                   if (themessages[i].reactions !== undefined){
                         Object.keys(themessages[i].reactions).forEach(function(item, index) {
+                        if ((theblockedtreatment == 1) && (themessages[i].reactions[item].length == 1) && (theblocked.includes(themessages[i].reactions[item][0]))) {
+
+                        } else {
                         var reactcontent = document.createElement("span");
                         reactcontent.id = "reactcont"
                         reactcontent.title = "reacted: "
@@ -1195,6 +1235,7 @@ function rendermessages(){
                          emotetimes.innerText = themessages[i].reactions[item].length
                          reactcontent.appendChild(emotetimes);
                          message.appendChild(reactcontent);
+                        }
                     });
 
                   }
